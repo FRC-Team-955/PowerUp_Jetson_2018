@@ -1,0 +1,14 @@
+\contentsline {section}{\numberline {1}Introduction/Why}{2}
+\contentsline {section}{\numberline {2}Libraries used}{2}
+\contentsline {section}{\numberline {3}Setting up the spline}{2}
+\contentsline {subsection}{\numberline {3.1}Background}{2}
+\contentsline {subsection}{\numberline {3.2}Control Points}{2}
+\contentsline {section}{\numberline {4}Generating paths}{3}
+\contentsline {subsection}{\numberline {4.1}Some notes about the notation}{3}
+\contentsline {subsection}{\numberline {4.2}Wheel positions}{3}
+\contentsline {subsection}{\numberline {4.3}Wheel velocities}{4}
+\contentsline {subsection}{\numberline {4.4}Reversing}{4}
+\contentsline {subsection}{\numberline {4.5}Incrementing over spline indices}{4}
+\contentsline {subsection}{\numberline {4.6}Real velocities of each wheel}{5}
+\contentsline {subsection}{\numberline {4.7}Accumulative distances}{5}
+\contentsline {section}{\numberline {5}Special Thanks}{5}
