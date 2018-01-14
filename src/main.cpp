@@ -14,10 +14,10 @@ int main () {
 	while (true) {
 		for (float i = 0; i < (pi * 2.0); i+= pi/10.0) {
 			Path path = GoalPathCalculator::calculate_path(
-					-i,  					//direction start
+					-i,  							//direction start
 					cv::Point2f(0.0, 0.0),  //position start
 					i,                      //direction end
-					cv::Point2f(0.5, 0.5),  //position end
+					cv::Point2f(3.0, 3.0),  //position end
 					0.5,                    //wheel distance
 					1.0,                    //max allowed velocity
 					0.01,                   //max time step
