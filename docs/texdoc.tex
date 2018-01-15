@@ -83,13 +83,13 @@ To find the position of a wheel at index $j$ along a spline, we first need to fi
 We then normalize the point by dividing it by the length of the original vector: \\
 \begin{equation}
 	\label{deriv_speed_vec}
-	\frac{(-y'(j), x'(j))}{\sqrt{x'(j)+y'(j)}}
+	\frac{(-y'(j), x'(j))}{\sqrt{x'(j)^2+y'(j)^2}}
 \end{equation}
 
 \noindent
 Adding the vector to the position along the curve gives us the final position of the wheel:
 \begin{equation}
-	(x(j), y(j)) \pm d \left(\frac{(-y'(j), x'(j))}{\sqrt{x'(j)+y'(j)}}\right)
+	(x(j), y(j)) \pm d \left(\frac{(-y'(j), x'(j))}{\sqrt{x'(j)^2+y'(j)^2}}\right)
 \end{equation}
 
 \noindent
@@ -98,7 +98,7 @@ Note: Either subtracting or adding the vector to the position gives us two disti
 \subsection{Wheel velocities}
 To find the velocity of each wheel, we can derive the position of each like so:
 \begin{equation}
-	(x'(j), y'(j)) \pm d\frac{(-y''(j), x''(j))*\sqrt{x'(j)^2+y'(j)^2} - (-y'(j), x'(j)) * \frac{y''(j)y'(j) + x''(j)x'(j)}{\sqrt{x'(j)^2+y'(j)^2}}}{x'(j)+y'(j)}
+	(x'(j), y'(j)) \pm d\frac{(-y''(j), x''(j))*\sqrt{x'(j)^2+y'(j)^2} - (-y'(j), x'(j)) * \frac{y''(j)y'(j) + x''(j)x'(j)}{\sqrt{x'(j)^2+y'(j)^2}}}{x'(j)^2+y'(j)^2}
 \end{equation}
 
 \subsection{Reversing}

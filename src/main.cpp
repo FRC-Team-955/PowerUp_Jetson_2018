@@ -14,31 +14,32 @@ int main () {
 	while (true) {
 		for (float i = 0; i < (pi * 2.0); i+= pi/10.0) {
 			Path path = GoalPathCalculator::calculate_path(
-					-i,  							//direction start
-					cv::Point2f(0.0, 0.0),  //position start
-					i,                      //direction end
-					cv::Point2f(3.0, 3.0),  //position end
-					0.5,                    //wheel distance
-					1.0,                    //max allowed velocity
-					0.01,                   //max time step
-					0.05);                  //min velocity
+					i, 							//direction start
+					cv::Point2f(0.0, 0.0),  		//position start
+					-pi / 2.0,               		//direction end
+					cv::Point2f(3000.0, 3000.0),  //position end
+					660.0 / 2.0,                  //wheel distance
+					1.0,                    		//max allowed velocity
+					10.0,                   		//max time step
+					0.05);                  		//min velocity
 			Path::TalonPoint next;
 			while(path.next_point(&next)) {
 				Renderer::clear();
 
-				Renderer::bound(Renderer::get_spline_size(&path.spline), 4.0);
+				Renderer::bound(cv::Rect2f(-1000, -1000, 5000, 5000), 4.0);
 
-				Renderer::grid(1.0, 1.0, 0.2, 0.2, 0.2, Renderer::get_spline_size(&path.spline));
+				Renderer::grid(1000.0, 1000.0, 0.2, 0.2, 0.2, Renderer::get_spline_size(&path.spline));
 
 				path.render();
 
 				Renderer::render_spline(&path.spline);
+				std::cout << "run" << std::endl;
 
 				float robot_angle = 0.0;
 				cv::Point2f robot_pos (0.0, 0.0);
 				path.get_current_loc_nondestruct(&robot_pos, &robot_angle);
-				float min = std::min(next.velocity_left, next.velocity_right);
-				Renderer::draw_robot(robot_angle, robot_pos, 1.5, 1.0, -min, min, 0.0);
+				float min = std::max(next.velocity_left, next.velocity_right);
+				Renderer::draw_robot(robot_angle, robot_pos, 700.0, 700.0, -min, min, 0.0);
 
 				Renderer::display();
 				//std::cout << path.official_traversal.spline_index << std::endl;
