@@ -16,13 +16,12 @@
 namespace FD = FieldDimension;
 const double pi = std::acos(-1);
 
-void draw_robot_follow_path(Path path, FieldRenderer f_renderer);
+void draw_robot_follow_path(Path path);
 bool socket_serve(Path path, SocketServer sock);
 
 int main () {
 
 #if JUST_RENDER
-	FieldRenderer f_renderer ((char*)"TODO");
 	Renderer::init();
 #else
 	SocketServer sock(5070);
@@ -35,17 +34,14 @@ int main () {
 					pi / 2.0, 							//direction start
 					cv::Point2f(1000.0, 600.0/2.0),  	//position start
 					pi / 2.0,               		//direction end
-					cv::Point2f(
-						FD::switch_plate_horizontal_offset + (FD::switch_plate_width / 2.0), 
-						FD::switch_plate_vertical_offset
-						), 								//position end
+					FD::Switch::left_plate.tl() + cv::Point2f(FD::Switch::left_plate.width / 2.0, 0.0), 
 					660.0 / 2.0,                  //wheel distance
 					1.0,                    		//max allowed velocity
 					20.0,                   		//max time step
 					0.05);                  		//min velocity
 
 #if JUST_RENDER
-			draw_robot_follow_path(path, f_renderer);
+			draw_robot_follow_path(path);
 #else
 			socket_serve(path, sock);
 #endif
@@ -53,10 +49,7 @@ int main () {
 		{
 			Path path = GoalPathCalculator::calculate_path(
 					pi / 2.0,               		//direction end
-					cv::Point2f(
-						FD::switch_plate_horizontal_offset + (FD::switch_plate_width / 2.0), 
-						FD::switch_plate_vertical_offset
-						), 								//position end
+					FD::Switch::left_plate.tl() + cv::Point2f(FD::Switch::left_plate.width / 2.0, 0.0), 
 					pi / 2.0, 							//direction start
 					cv::Point2f(4000.0, 600.0/2.0),  	//position start
 					660.0 / 2.0,                  //wheel distance
@@ -65,7 +58,7 @@ int main () {
 					0.05);                  		//min velocity
 
 #if JUST_RENDER
-			draw_robot_follow_path(path, f_renderer);
+			draw_robot_follow_path(path);
 #else
 			socket_serve(path, sock);
 #endif
@@ -73,13 +66,13 @@ int main () {
 	}
 }
 
-void draw_robot_follow_path(Path path, FieldRenderer f_renderer) {
+void draw_robot_follow_path(Path path) {
 	Path::TalonPoint next;
 	while(path.next_point(&next)) {
 		Renderer::clear();
-		auto view = f_renderer.render();
-		Renderer::bound(view, 4.0);
-		Renderer::grid(1000.0, 1000.0, 0.2, 0.2, 0.2, view);
+		FieldRenderer::render((char*)"TODO");
+		Renderer::bound(FD::field_bounds, 4.0);
+		Renderer::grid(1000.0, 1000.0, 0.2, 0.2, 0.2, FD::field_bounds);
 
 		path.render();
 		Renderer::render_spline(&path.spline);

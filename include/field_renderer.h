@@ -7,12 +7,9 @@
 #include <GL/gl.h>
 #include <GL/glu.h>
 
-class FieldRenderer {
-	public:
-		FieldRenderer(char* config);
-		cv::Rect2f render();
-	private:
-		void render_rect(cv::Rect2f input, float r, float g, float b);
+namespace FieldRenderer {
+	void render(char* config);
+	void render_rect(cv::Rect2f input, float r, float g, float b);
 };
 
 #endif
