@@ -4,8 +4,8 @@ namespace Renderer {
 	void clear() { glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); }
 
 	void reshape(int w, int h) { 
-		int max = std::max(w, h);
-		glViewport(0, 0, (GLsizei)max, (GLsizei)max);
+		int min = std::min(w, h);
+		glViewport(0, 0, (GLsizei)min, (GLsizei)min);
 	}
 
 	void draw_string(float x, float y, char *input) {
@@ -130,17 +130,18 @@ namespace Renderer {
 	void bound(cv::Rect2f input, float max_z)
 	{
 		glLoadIdentity();
-		float min = std::min(input.x, input.y);
-		float max = std::max(input.br().x, input.br().x);
-		min -= 1.0;
-		max += 1.0;
-		glOrtho(min, max, min, max, -max_z, max_z);
+		float min = std::min(input.tl().x, input.tl().y);
+		float max = std::max(input.br().x, input.br().y);
+		glOrtho(min, max, min, max, max_z, -max_z);
 	}
 
 	void display() {
 		glutSwapBuffers();
 		glutPostRedisplay();
+ 		glutMainLoopEvent();
 	}
+
+	void fake_display () {}
 
 	void init()
 	{
@@ -156,6 +157,6 @@ namespace Renderer {
 		glutCreateWindow("Spline Display Out");
 		glutReshapeFunc(reshape);
 		nurbs = gluNewNurbsRenderer();
-		//glutDisplayFunc(display);
+		glutDisplayFunc(fake_display);
 	}
 } // namespace Renderer

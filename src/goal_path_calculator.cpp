@@ -14,28 +14,30 @@ namespace GoalPathCalculator {
 		std::vector<tinyspline::real> ctrlp = spline.ctrlp();
 		const float pi = std::acos(-1);
 
+		//Is the end vector behind the starting vector?
 		bool reverse = (position_end - position_start).dot(cv::Point2f(cos(direction_start), sin(direction_start))) < 0;
 
+		//TODO: Ensure reversing works for all combinations
 		ctrlp[0] = position_start.x;
 		ctrlp[1] = position_start.y;
 		ctrlp[2] = min_velocity;
 
-		auto leading_a_start = MiscMath::RadialOffset(reverse ? direction_start + pi : direction_start, wheel_distance / 2.0, position_start);
+		auto leading_a_start = MiscMath::RadialOffset(reverse ? direction_start + pi : direction_start, wheel_distance, position_start);
 		ctrlp[3] = leading_a_start.x;
 		ctrlp[4] = leading_a_start.y;
 		ctrlp[5] = max_allowed_velocity;
 
-		auto leading_b_start = MiscMath::RadialOffset(reverse ? direction_start + pi : direction_start, wheel_distance, position_start);
+		auto leading_b_start = MiscMath::RadialOffset(reverse ? direction_start + pi : direction_start, wheel_distance * 2.0, position_start);
 		ctrlp[6] = leading_b_start.x;
 		ctrlp[7] = leading_b_start.y;
 		ctrlp[8] = max_allowed_velocity;
 
-		auto leading_a_end = MiscMath::RadialOffset(reverse ? direction_end + pi : direction_end, wheel_distance, position_end);
+		auto leading_a_end = MiscMath::RadialOffset(reverse ? direction_end : direction_end + pi, wheel_distance * 2.0, position_end);
 		ctrlp[9] = leading_a_end.x;
 		ctrlp[10] = leading_a_end.y;
 		ctrlp[11] = max_allowed_velocity;
 
-		auto leading_b_end = MiscMath::RadialOffset(reverse ? direction_end + pi : direction_end, wheel_distance / 2.0, position_end);
+		auto leading_b_end = MiscMath::RadialOffset(reverse ? direction_end : direction_end + pi, wheel_distance, position_end);
 		ctrlp[12] = leading_b_end.x;
 		ctrlp[13] = leading_b_end.y;
 		ctrlp[14] = max_allowed_velocity;
