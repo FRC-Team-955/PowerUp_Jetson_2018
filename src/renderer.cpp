@@ -5,7 +5,7 @@ namespace Renderer {
 
 	void reshape(int w, int h) { 
 		int max = std::max(w, h);
-		glViewport(0, 0, (GLsizei)max, (GLsizei)max); 
+		glViewport(0, 0, (GLsizei)max, (GLsizei)max);
 	}
 
 	void draw_string(float x, float y, char *input) {
@@ -94,27 +94,6 @@ namespace Renderer {
 		}
 		glEnd();
 	}
-
-	/*
-		void add_border(float r, float g, float b)
-		{
-		glColor3f(r, g, b);
-		glLineWidth(2);
-		glBegin(GL_LINES);
-		glVertex2f(max_x, max_y);
-		glVertex2f(max_x, min_y);
-
-		glVertex2f(max_x, min_y);
-		glVertex2f(min_x, min_y);
-
-		glVertex2f(min_x, min_y);
-		glVertex2f(min_x, max_y);
-
-		glVertex2f(max_x, max_y);
-		glVertex2f(min_x, max_y);
-		glEnd();
-		}
-		*/
 
 	void grid(float step_x, float step_y, float r, float g, float b, cv::Rect2f screen_dim)
 	{

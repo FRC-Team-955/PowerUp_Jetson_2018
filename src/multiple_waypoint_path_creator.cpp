@@ -33,6 +33,6 @@ bool MultipleWaypointPathCreator::push_point_direction(cv::Point2f position, flo
 
 Path MultipleWaypointPathCreator::calculate_path() {
 	spline.setCtrlp(ctrlp);
-	return Path(spline, wheel_distance, max_time_step);
+	return Path(spline, wheel_distance, max_time_step, false);
 }
 

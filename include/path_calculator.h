@@ -27,7 +27,7 @@ class Path {
 			} special;
 		};
 
-		Path(tinyspline::BSpline spline, float wheel_distance, float max_change_time);
+		Path(tinyspline::BSpline spline, float wheel_distance, float max_change_time, bool reverse);
 		bool next_point(TalonPoint* output);
 
 		//Inherited members TODO: Remove from header?
@@ -50,5 +50,6 @@ class Path {
 
 		float wheel_distance = 0.0;
 		float max_change_time = 0.0;
+		bool reverse = false;
 };
 #endif

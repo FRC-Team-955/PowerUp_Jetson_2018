@@ -1,10 +1,11 @@
 #include <path_calculator.h>
-Path::Path(tinyspline::BSpline spline, float wheel_distance, float max_change_time) {
+Path::Path(tinyspline::BSpline spline, float wheel_distance, float max_change_time, bool reverse) {
 	this->spline = spline;
 	this->spline_derive = this->spline.derive();
 	this->spline_derive_sq = this->spline_derive.derive();
 	this->wheel_distance = wheel_distance;
 	this->max_change_time = max_change_time;
+	this->reverse = reverse;
 }
 
 bool Path::next_point (TalonPoint* output) { //TODO: Optionally return these coords or display them
@@ -83,10 +84,10 @@ bool Path::next_point_raw (TalonPoint* output, Traversal* traversal, cv::Point2f
 			special = TalonPoint::Special::End;
 		}
 
-		output->position_left = traversal->left_accum;
-		output->velocity_left = absolute_velocity_left;
-		output->position_right = traversal->right_accum;
-		output->velocity_right = absolute_velocity_right;
+		output->position_left = reverse ? -traversal->left_accum : traversal->left_accum;
+		output->velocity_left = reverse ? -absolute_velocity_left : absolute_velocity_left;
+		output->position_right = reverse ? -traversal->right_accum : traversal->right_accum;
+		output->velocity_right = reverse ? -absolute_velocity_right : absolute_velocity_right;
 		output->delta_time = max_change_time;
 		output->special = special;
 		*out_left = point_sp_cv + point_norm_cv;
@@ -110,6 +111,7 @@ void Path::render()
 	next_point_raw(&current_talonpoint, &traversal, &current_left, &current_right);
 	last_left = current_left;
 	last_right = current_right;
+
 	while(next_point_raw(&current_talonpoint, &traversal, &current_left, &current_right)) {
 		Renderer::color_by(current_talonpoint.velocity_left);
 		glVertex2f(last_left.x, last_left.y);
