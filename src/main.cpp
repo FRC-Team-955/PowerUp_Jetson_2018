@@ -27,7 +27,6 @@ int main () {
 	SocketServer sock(5070);
 #endif
 
-	MultipleWaypointPathCreator creator (2, 10.0, 660.0 / 2.0);	
 	while (true) {
 		{
 			Path path = GoalPathCalculator::calculate_path(

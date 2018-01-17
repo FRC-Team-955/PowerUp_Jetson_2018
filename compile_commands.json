@@ -1,1 +1,86 @@
-build/compile_commands.json
+[{
+  "directory": "/home/duncan/Projects/Robotics/PowerUp_Jetson_2018/build",
+  "command": "/usr/bin/clang++   -I/usr/local/include/librealsense -I/usr/local/include/tinysplinecpp.h -I/home/duncan/Projects/Robotics/PowerUp_Jetson_2018/./include -isystem /usr/include/opencv   -std=c++11    -o CMakeFiles/PowerUp2018.dir/src/field_renderer.cpp.o -c /home/duncan/Projects/Robotics/PowerUp_Jetson_2018/src/field_renderer.cpp",
+  "file": "/home/duncan/Projects/Robotics/PowerUp_Jetson_2018/include/field_dimensions.h"
+},
+{
+  "directory": "/home/duncan/Projects/Robotics/PowerUp_Jetson_2018/build",
+  "command": "/usr/bin/clang++   -I/usr/local/include/librealsense -I/usr/local/include/tinysplinecpp.h -I/home/duncan/Projects/Robotics/PowerUp_Jetson_2018/./include -isystem /usr/include/opencv   -std=c++11    -o CMakeFiles/PowerUp2018.dir/src/field_renderer.cpp.o -c /home/duncan/Projects/Robotics/PowerUp_Jetson_2018/src/field_renderer.cpp",
+  "file": "/home/duncan/Projects/Robotics/PowerUp_Jetson_2018/include/field_renderer.h"
+},
+{
+  "directory": "/home/duncan/Projects/Robotics/PowerUp_Jetson_2018/build",
+  "command": "/usr/bin/clang++   -I/usr/local/include/librealsense -I/usr/local/include/tinysplinecpp.h -I/home/duncan/Projects/Robotics/PowerUp_Jetson_2018/./include -isystem /usr/include/opencv   -std=c++11    -o CMakeFiles/PowerUp2018.dir/src/field_renderer.cpp.o -c /home/duncan/Projects/Robotics/PowerUp_Jetson_2018/src/field_renderer.cpp",
+  "file": "/home/duncan/Projects/Robotics/PowerUp_Jetson_2018/include/goal_path_calculator.h"
+},
+{
+  "directory": "/home/duncan/Projects/Robotics/PowerUp_Jetson_2018/build",
+  "command": "/usr/bin/clang++   -I/usr/local/include/librealsense -I/usr/local/include/tinysplinecpp.h -I/home/duncan/Projects/Robotics/PowerUp_Jetson_2018/./include -isystem /usr/include/opencv   -std=c++11    -o CMakeFiles/PowerUp2018.dir/src/field_renderer.cpp.o -c /home/duncan/Projects/Robotics/PowerUp_Jetson_2018/src/field_renderer.cpp",
+  "file": "/home/duncan/Projects/Robotics/PowerUp_Jetson_2018/include/misc_math.h"
+},
+{
+  "directory": "/home/duncan/Projects/Robotics/PowerUp_Jetson_2018/build",
+  "command": "/usr/bin/clang++   -I/usr/local/include/librealsense -I/usr/local/include/tinysplinecpp.h -I/home/duncan/Projects/Robotics/PowerUp_Jetson_2018/./include -isystem /usr/include/opencv   -std=c++11    -o CMakeFiles/PowerUp2018.dir/src/field_renderer.cpp.o -c /home/duncan/Projects/Robotics/PowerUp_Jetson_2018/src/field_renderer.cpp",
+  "file": "/home/duncan/Projects/Robotics/PowerUp_Jetson_2018/include/multiple_waypoint_path_creator.h"
+},
+{
+  "directory": "/home/duncan/Projects/Robotics/PowerUp_Jetson_2018/build",
+  "command": "/usr/bin/clang++   -I/usr/local/include/librealsense -I/usr/local/include/tinysplinecpp.h -I/home/duncan/Projects/Robotics/PowerUp_Jetson_2018/./include -isystem /usr/include/opencv   -std=c++11    -o CMakeFiles/PowerUp2018.dir/src/field_renderer.cpp.o -c /home/duncan/Projects/Robotics/PowerUp_Jetson_2018/src/field_renderer.cpp",
+  "file": "/home/duncan/Projects/Robotics/PowerUp_Jetson_2018/include/path_calculator.h"
+},
+{
+  "directory": "/home/duncan/Projects/Robotics/PowerUp_Jetson_2018/build",
+  "command": "/usr/bin/clang++   -I/usr/local/include/librealsense -I/usr/local/include/tinysplinecpp.h -I/home/duncan/Projects/Robotics/PowerUp_Jetson_2018/./include -isystem /usr/include/opencv   -std=c++11    -o CMakeFiles/PowerUp2018.dir/src/field_renderer.cpp.o -c /home/duncan/Projects/Robotics/PowerUp_Jetson_2018/src/field_renderer.cpp",
+  "file": "/home/duncan/Projects/Robotics/PowerUp_Jetson_2018/include/renderer.h"
+},
+{
+  "directory": "/home/duncan/Projects/Robotics/PowerUp_Jetson_2018/build",
+  "command": "/usr/bin/clang++   -I/usr/local/include/librealsense -I/usr/local/include/tinysplinecpp.h -I/home/duncan/Projects/Robotics/PowerUp_Jetson_2018/./include -isystem /usr/include/opencv   -std=c++11    -o CMakeFiles/PowerUp2018.dir/src/field_renderer.cpp.o -c /home/duncan/Projects/Robotics/PowerUp_Jetson_2018/src/field_renderer.cpp",
+  "file": "/home/duncan/Projects/Robotics/PowerUp_Jetson_2018/include/socket.h"
+},
+{
+  "directory": "/home/duncan/Projects/Robotics/PowerUp_Jetson_2018/build",
+  "command": "/usr/bin/clang++   -I/usr/local/include/librealsense -I/usr/local/include/tinysplinecpp.h -I/home/duncan/Projects/Robotics/PowerUp_Jetson_2018/./include -isystem /usr/include/opencv   -std=c++11    -o CMakeFiles/PowerUp2018.dir/src/field_renderer.cpp.o -c /home/duncan/Projects/Robotics/PowerUp_Jetson_2018/src/field_renderer.cpp",
+  "file": "/home/duncan/Projects/Robotics/PowerUp_Jetson_2018/include/sq_derivable.h"
+},
+{
+  "directory": "/home/duncan/Projects/Robotics/PowerUp_Jetson_2018/build",
+  "command": "/usr/bin/clang++   -I/usr/local/include/librealsense -I/usr/local/include/tinysplinecpp.h -I/home/duncan/Projects/Robotics/PowerUp_Jetson_2018/./include -isystem /usr/include/opencv   -std=c++11    -o CMakeFiles/PowerUp2018.dir/src/field_renderer.cpp.o -c /home/duncan/Projects/Robotics/PowerUp_Jetson_2018/src/field_renderer.cpp",
+  "file": "/home/duncan/Projects/Robotics/PowerUp_Jetson_2018/src/field_renderer.cpp"
+},
+{
+  "directory": "/home/duncan/Projects/Robotics/PowerUp_Jetson_2018/build",
+  "command": "/usr/bin/clang++   -I/usr/local/include/librealsense -I/usr/local/include/tinysplinecpp.h -I/home/duncan/Projects/Robotics/PowerUp_Jetson_2018/./include -isystem /usr/include/opencv   -std=c++11    -o CMakeFiles/PowerUp2018.dir/src/field_renderer.cpp.o -c /home/duncan/Projects/Robotics/PowerUp_Jetson_2018/src/field_renderer.cpp",
+  "file": "/home/duncan/Projects/Robotics/PowerUp_Jetson_2018/src/goal_path_calculator.cpp"
+},
+{
+  "directory": "/home/duncan/Projects/Robotics/PowerUp_Jetson_2018/build",
+  "command": "/usr/bin/clang++   -I/usr/local/include/librealsense -I/usr/local/include/tinysplinecpp.h -I/home/duncan/Projects/Robotics/PowerUp_Jetson_2018/./include -isystem /usr/include/opencv   -std=c++11    -o CMakeFiles/PowerUp2018.dir/src/field_renderer.cpp.o -c /home/duncan/Projects/Robotics/PowerUp_Jetson_2018/src/field_renderer.cpp",
+  "file": "/home/duncan/Projects/Robotics/PowerUp_Jetson_2018/src/main.cpp"
+},
+{
+  "directory": "/home/duncan/Projects/Robotics/PowerUp_Jetson_2018/build",
+  "command": "/usr/bin/clang++   -I/usr/local/include/librealsense -I/usr/local/include/tinysplinecpp.h -I/home/duncan/Projects/Robotics/PowerUp_Jetson_2018/./include -isystem /usr/include/opencv   -std=c++11    -o CMakeFiles/PowerUp2018.dir/src/field_renderer.cpp.o -c /home/duncan/Projects/Robotics/PowerUp_Jetson_2018/src/field_renderer.cpp",
+  "file": "/home/duncan/Projects/Robotics/PowerUp_Jetson_2018/src/misc_math.cpp"
+},
+{
+  "directory": "/home/duncan/Projects/Robotics/PowerUp_Jetson_2018/build",
+  "command": "/usr/bin/clang++   -I/usr/local/include/librealsense -I/usr/local/include/tinysplinecpp.h -I/home/duncan/Projects/Robotics/PowerUp_Jetson_2018/./include -isystem /usr/include/opencv   -std=c++11    -o CMakeFiles/PowerUp2018.dir/src/field_renderer.cpp.o -c /home/duncan/Projects/Robotics/PowerUp_Jetson_2018/src/field_renderer.cpp",
+  "file": "/home/duncan/Projects/Robotics/PowerUp_Jetson_2018/src/multiple_waypoint_path_creator.cpp"
+},
+{
+  "directory": "/home/duncan/Projects/Robotics/PowerUp_Jetson_2018/build",
+  "command": "/usr/bin/clang++   -I/usr/local/include/librealsense -I/usr/local/include/tinysplinecpp.h -I/home/duncan/Projects/Robotics/PowerUp_Jetson_2018/./include -isystem /usr/include/opencv   -std=c++11    -o CMakeFiles/PowerUp2018.dir/src/field_renderer.cpp.o -c /home/duncan/Projects/Robotics/PowerUp_Jetson_2018/src/field_renderer.cpp",
+  "file": "/home/duncan/Projects/Robotics/PowerUp_Jetson_2018/src/path_calculator.cpp"
+},
+{
+  "directory": "/home/duncan/Projects/Robotics/PowerUp_Jetson_2018/build",
+  "command": "/usr/bin/clang++   -I/usr/local/include/librealsense -I/usr/local/include/tinysplinecpp.h -I/home/duncan/Projects/Robotics/PowerUp_Jetson_2018/./include -isystem /usr/include/opencv   -std=c++11    -o CMakeFiles/PowerUp2018.dir/src/field_renderer.cpp.o -c /home/duncan/Projects/Robotics/PowerUp_Jetson_2018/src/field_renderer.cpp",
+  "file": "/home/duncan/Projects/Robotics/PowerUp_Jetson_2018/src/renderer.cpp"
+},
+{
+  "directory": "/home/duncan/Projects/Robotics/PowerUp_Jetson_2018/build",
+  "command": "/usr/bin/clang++   -I/usr/local/include/librealsense -I/usr/local/include/tinysplinecpp.h -I/home/duncan/Projects/Robotics/PowerUp_Jetson_2018/./include -isystem /usr/include/opencv   -std=c++11    -o CMakeFiles/PowerUp2018.dir/src/field_renderer.cpp.o -c /home/duncan/Projects/Robotics/PowerUp_Jetson_2018/src/field_renderer.cpp",
+  "file": "/home/duncan/Projects/Robotics/PowerUp_Jetson_2018/src/socket.cpp"
+},
+]
