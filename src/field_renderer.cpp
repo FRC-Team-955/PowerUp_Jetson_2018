@@ -6,10 +6,15 @@ void FieldRenderer::render(char* config) {
 	//Field bounds
 	render_rect(FD::field_bounds, 1.0, 1.0, 1.0);
 
-	//Left plate
+	//Switch
 	render_rect(FD::Switch::left_plate, 1.0, 0.1, 0.1);
 	render_rect(FD::Switch::right_plate, 0.1, 0.1, 1.0);
 	render_rect(FD::Switch::boom, 0.8, 0.8, 0.8);
+
+	//Scale
+	render_rect(FD::Scale::left_plate, 1.0, 0.1, 0.1);
+	render_rect(FD::Scale::right_plate, 0.1, 0.1, 1.0);
+	render_rect(FD::Scale::boom, 0.8, 0.8, 0.8);
 }
 
 void FieldRenderer::render_rect(cv::Rect2f input, float r, float g, float b) {
