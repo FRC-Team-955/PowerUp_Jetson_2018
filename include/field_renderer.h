@@ -8,8 +8,8 @@
 #include <GL/glu.h>
 
 namespace FieldRenderer {
-	void render(char* config);
-	void render_rect(cv::Rect2f input, float r, float g, float b);
+	void render(char* config, bool we_are_blue);
+	void render_rect(cv::Rect2f input, cv::Point3f rgb);
 };
 
 #endif

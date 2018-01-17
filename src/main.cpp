@@ -47,10 +47,10 @@ int main () {
 		}
 		{
 			Path path = GoalPathCalculator::calculate_path(
-					pi / 2.0,               		//direction end
-					FD::Switch::left_plate.tl() + cv::Point2f(FD::Switch::left_plate.width / 2.0, 0.0), 
-					pi / 2.0, 							//direction start
-					cv::Point2f(4000.0, 600.0/2.0),  	//position start
+					pi / 2.0,               		//direction start
+					FD::Scale::left_plate.tl() + cv::Point2f(FD::Scale::left_plate.width / 2.0, 0.0),  //Position start
+					pi / 2.0, 							//direction end
+					cv::Point2f(4000.0, 600.0/2.0),  	//position end
 					660.0 / 2.0,                  //wheel distance
 					1.0,                    		//max allowed velocity
 					20.0,                   		//max time step
@@ -69,7 +69,7 @@ void draw_robot_follow_path(Path path) {
 	Path::TalonPoint next;
 	while(path.next_point(&next)) {
 		Renderer::clear();
-		FieldRenderer::render((char*)"TODO");
+		FieldRenderer::render((char*)"LL", false);
 		Renderer::bound(FD::field_bounds, 4.0);
 		Renderer::grid(1000.0, 1000.0, 0.2, 0.2, 0.2, FD::field_bounds);
 
