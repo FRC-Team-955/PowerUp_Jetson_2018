@@ -45,23 +45,6 @@ int main () {
 			socket_serve(path, sock);
 #endif
 		}
-		{
-			Path path = GoalPathCalculator::calculate_path(
-					pi / 2.0,               		//direction start
-					FD::Scale::left_plate.tl() + cv::Point2f(FD::Scale::left_plate.width / 2.0, 0.0),  //Position start
-					pi / 2.0, 							//direction end
-					cv::Point2f(4000.0, 600.0/2.0),  	//position end
-					660.0 / 2.0,                  //wheel distance
-					1.0,                    		//max allowed velocity
-					20.0,                   		//max time step
-					0.05);                  		//min velocity
-
-#if JUST_RENDER
-			draw_robot_follow_path(path);
-#else
-			socket_serve(path, sock);
-#endif
-		}
 	}
 }
 

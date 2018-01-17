@@ -6,9 +6,7 @@
 namespace MiscMath {
 	bool ToleranceCheck(float input, float expect, float tolerance);
 
-	float PointDistance(cv::Point* a, cv::Point* b);
-
-	float PointDistance(cv::Point a, cv::Point b);
+	float PointDistance(cv::Point2f a, cv::Point2f b);
 
 	float PointDistance(cv::Point2f a, cv::Point2f b);
 
@@ -16,11 +14,10 @@ namespace MiscMath {
 
 	cv::Point2f MoveAlongLine(bool forward, float distance, float slope, cv::Point2f start);
 
-	cv::Point MidPoint(cv::Point* a, cv::Point* b);
+	//Takes the normal to a vector (I.E rotates it 90 degrees upward)
+	cv::Point2f NormalTo(cv::Point2f input);
 
-	cv::Point MidPoint(cv::Point a, cv::Point b);
-
-	cv::Point GetCenter(cv::Rect* rectangle);
+	cv::Point2f MidPoint(cv::Point2f a, cv::Point2f b);
 
 	cv::Point2f RadialOffset(float radians, float distance, cv::Point2f offset);
 

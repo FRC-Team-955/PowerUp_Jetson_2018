@@ -5,16 +5,6 @@ bool MiscMath::ToleranceCheck(float input, float expect, float tolerance)
     return fabs(input - expect) <= tolerance;
 }
 
-float MiscMath::PointDistance(cv::Point* a, cv::Point* b)
-{
-    return cv::norm(*b - *a);
-}
-
-float MiscMath::PointDistance(cv::Point a, cv::Point b)
-{
-    return cv::norm(b - a);
-}
-
 float MiscMath::PointDistance(cv::Point2f a, cv::Point2f b)
 {
     return cv::norm(b - a);
@@ -31,19 +21,9 @@ cv::Point2f MiscMath::MoveAlongLine(bool forward, float distance, float slope, c
     return start + (k * cv::Point2f(1, slope));
 }
 
-cv::Point MiscMath::MidPoint(cv::Point* a, cv::Point* b)
-{
-    return (*a + *b) / 2;
-}
-
-cv::Point MiscMath::MidPoint(cv::Point a, cv::Point b)
+cv::Point2f MiscMath::MidPoint(cv::Point2f a, cv::Point2f b)
 {
     return (a + b) / 2;
-}
-
-cv::Point MiscMath::GetCenter(cv::Rect* rectangle)
-{
-    return (rectangle->br() + rectangle->tl()) / 2;
 }
 
 cv::Point2f MiscMath::RadialOffset(float radians, float distance, cv::Point2f offset)
@@ -55,4 +35,8 @@ cv::Point2f MiscMath::RadialOffset(float radians, float distance, cv::Point2f of
 
 float MiscMath::LineSlope(cv::Point2f a, cv::Point2f b) {
 	return (b.y - a.y) / (b.x - a.x);
+}
+
+cv::Point2f MiscMath::NormalTo(cv::Point2f input) {
+	return cv::Point2f(-input.y, input.x);
 }
