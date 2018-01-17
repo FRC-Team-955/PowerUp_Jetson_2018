@@ -11,24 +11,13 @@
 #include <GL/freeglut.h>
 #include <GL/gl.h>
 #include <GL/glu.h>
+#include <shared_network_types.h>
 
 class Path {
 	public:
-		struct TalonPoint {
-			float position_left;
-			float velocity_left;
-			float position_right;
-			float velocity_right;
-			float delta_time;
-			enum Special {
-				Beginning = 0,
-				Middle = 1,
-				End = 2
-			} special;
-		};
 
 		Path(tinyspline::BSpline spline, float wheel_distance, float max_change_time, bool reverse);
-		bool next_point(TalonPoint* output);
+		bool next_point(TankDriveMotionUnit* output);
 
 		//Inherited members TODO: Remove from header?
 		void render();
@@ -41,7 +30,7 @@ class Path {
 		} official_traversal; //Official is the front facing one for external use
 		void get_current_loc_nondestruct(cv::Point2f* out_center, float* out_angle);
 	private: 
-		bool next_point_raw(TalonPoint* output, Traversal* traversal, cv::Point2f* out_left, cv::Point2f* out_right);
+		bool next_point_raw(TankDriveMotionUnit* output, Traversal* traversal, cv::Point2f* out_left, cv::Point2f* out_right);
 
 		tinyspline::BSpline spline_derive;
 		tinyspline::BSpline spline_derive_sq;

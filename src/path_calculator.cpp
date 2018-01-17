@@ -8,7 +8,7 @@ Path::Path(tinyspline::BSpline spline, float wheel_distance, float max_change_ti
 	this->reverse = reverse;
 }
 
-bool Path::next_point (TalonPoint* output) { //TODO: Optionally return these coords or display them
+bool Path::next_point (TankDriveMotionUnit* output) { //TODO: Optionally return these coords or display them
 	cv::Point2f dummy_left;
 	cv::Point2f dummy_right;
 	return next_point_raw(output, &this->official_traversal, &dummy_left, &dummy_right);
@@ -22,7 +22,7 @@ void Path::get_current_loc_nondestruct(cv::Point2f* out_center, float* out_angle
 		*out_angle = atan2(point_dr_cv.y, point_dr_cv.x);
 }
 
-bool Path::next_point_raw (TalonPoint* output, Traversal* traversal, cv::Point2f* out_left, cv::Point2f* out_right) {
+bool Path::next_point_raw (TankDriveMotionUnit* output, Traversal* traversal, cv::Point2f* out_left, cv::Point2f* out_right) {
 		//Calculate spline evaluations
 		auto point_sp = spline.evaluate(traversal->spline_index).result();
 		auto point_dr = spline_derive.evaluate(traversal->spline_index).result();
@@ -73,15 +73,15 @@ bool Path::next_point_raw (TalonPoint* output, Traversal* traversal, cv::Point2f
 		traversal->left_accum += absolute_velocity_left * max_change_time;
 		traversal->right_accum += absolute_velocity_right * max_change_time;
 		
-		TalonPoint::Special special = TalonPoint::Special::Middle;
+		TankDriveMotionUnit::Special special = TankDriveMotionUnit::Special::Middle;
 		if (traversal->spline_index == 0.0) {
-			special = TalonPoint::Special::Beginning;
+			special = TankDriveMotionUnit::Special::Beginning;
 		}
 
 		traversal->spline_index += (1.0 / speed_max) * max_allowed_velocity * max_change_time;
 
 		if (traversal->spline_index >= 1.0) {
-			special = TalonPoint::Special::End;
+			special = TankDriveMotionUnit::Special::End;
 		}
 
 		output->position_left = reverse ? -traversal->left_accum : traversal->left_accum;
@@ -99,7 +99,7 @@ bool Path::next_point_raw (TalonPoint* output, Traversal* traversal, cv::Point2f
 void Path::render()
 {
 	Traversal traversal;
-	TalonPoint current_talonpoint;
+	TankDriveMotionUnit current_talonpoint;
 	cv::Point2f last_left;
 	cv::Point2f last_right;
 	cv::Point2f current_left;

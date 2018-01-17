@@ -6,6 +6,7 @@
 #include <multiple_waypoint_path_creator.h>
 #include <field_renderer.h>
 #include <field_dimensions.h>
+#include <shared_network_types.h>
 
 #define JUST_RENDER true
 
@@ -49,7 +50,7 @@ int main () {
 }
 
 void draw_robot_follow_path(Path path) {
-	Path::TalonPoint next;
+	TankDriveMotionUnit next;
 	while(path.next_point(&next)) {
 		Renderer::clear();
 		FieldRenderer::render((char*)"LL", false);
@@ -71,10 +72,10 @@ void draw_robot_follow_path(Path path) {
 
 
 bool socket_serve(Path path, SocketServer sock) {
-	Path::TalonPoint next;
+	TankDriveMotionUnit next;
 	do {
 		std::cout << "Writing" << std::endl;
-		sock.write_to(&next, sizeof(Path::TalonPoint));
+		sock.write_to(&next, sizeof(TankDriveMotionUnit));
 		bool abort;
 		std::cout << "Reading" << std::endl;
 		sock.read_to(&abort, sizeof(bool)); //Read once before we update the spline
