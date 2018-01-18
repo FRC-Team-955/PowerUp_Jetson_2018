@@ -1,5 +1,5 @@
 output=compile_commands.json
-rm -v compile_commands.json 2> /dev/null
+rm compile_commands.json 2> /dev/null
 echo -n '[' >> $output
 for file in include/* src/*; do 
 cat << EOF >> $output

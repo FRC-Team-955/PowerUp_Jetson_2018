@@ -7,6 +7,7 @@
 #include <field_renderer.h>
 #include <field_dimensions.h>
 #include <shared_network_types.h>
+#include <spline_wrap.h>
 
 #define JUST_RENDER true
 

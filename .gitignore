@@ -1,3 +1,4 @@
 build
 vimsession.vim
 watch-build.sh
+compile_commands.json
