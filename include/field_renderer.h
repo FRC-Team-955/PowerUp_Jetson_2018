@@ -8,6 +8,12 @@
 #include <GL/glu.h>
 
 namespace FieldRenderer {
+
+	const cv::Point3f white (1.0, 1.0, 1.0);
+	const cv::Point3f grey (0.8, 0.8, 0.8);
+	const cv::Point3f red (1.0, 0.3, 0.3);
+	const cv::Point3f blue (0.2, 0.5, 1.0);
+
 	void render(char* config, bool we_are_blue);
 	void render_rect(cv::Rect2f input, cv::Point3f rgb);
 };

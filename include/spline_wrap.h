@@ -6,6 +6,7 @@
 #include <opencv2/opencv.hpp>
 #include <vector>
 #include <renderer.h>
+#include <error_printing.h>
 
 class SplineWrap : public SQDerivable {
 	public:

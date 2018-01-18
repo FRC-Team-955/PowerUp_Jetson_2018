@@ -2,11 +2,13 @@
 
 SplineWrap::SplineWrap(int nCtrlp, std::vector<cv::Point3f> points) {
 	spline = tinyspline::BSpline(nCtrlp, spline_dimension, 3);
-	set_ctrlpts(points);
+	if (!set_ctrlpts(points)) //TODO: Real error handling
+		ErrorPrinting::print_error("failed to set control points (Not enough!)");
 }
 
 bool SplineWrap::set_ctrlpts(std::vector<cv::Point3f> points) {
-	if (points.size() * spline_dimension != spline.nCtrlp()) {
+	if (points.size() != spline.nCtrlp()) {
+		std::cout << points.size() << " " << spline_dimension << " " << spline.nCtrlp() << std::endl;
 		return false;
 	}
 	std::vector<tinyspline::real> ctrlp;
@@ -18,6 +20,8 @@ bool SplineWrap::set_ctrlpts(std::vector<cv::Point3f> points) {
 	spline.setCtrlp(ctrlp);
 	spline_derive = spline.derive();
 	spline_derive_sq = spline_derive.derive();
+	function_index = 0.0;
+	advance(0.0);
 	return true;
 }
 
@@ -34,7 +38,7 @@ bool SplineWrap::advance(float index) {
 }
 
 bool SplineWrap::is_at_end() {
-	return function_index >= 1.0;
+	return fabs(function_index - 1.0) <= 0.01;
 }
 
 bool SplineWrap::is_at_beginning() {

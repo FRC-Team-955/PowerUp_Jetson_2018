@@ -4,11 +4,6 @@ namespace FD = FieldDimension;
 
 void FieldRenderer::render(char* config, bool we_are_blue) {
 
-	cv::Point3f white (1.0, 1.0, 1.0);
-	cv::Point3f grey (0.8, 0.8, 0.8);
-	cv::Point3f red (1.0, 0.3, 0.3);
-	cv::Point3f blue (0.2, 0.5, 1.0);
-
 	//Field bounds
 	render_rect(FD::field_bounds, we_are_blue ? blue : red);
 

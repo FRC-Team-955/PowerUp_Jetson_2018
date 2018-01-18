@@ -34,16 +34,17 @@ AToB::AToB (float direction_start,
 	this->wheel_distance = wheel_distance;
 }
 
-TankDriveCalculator::TankOutput AToB::evaluate(bool advance) {
-	return TankDriveCalculator::evaluate(wrap, wheel_distance, max_change_time, reverse, !advance);
+TankDriveCalculator::TankOutput AToB::evaluate() {
+	return TankDriveCalculator::evaluate(wrap, wheel_distance, max_change_time, reverse);
 }
 
 void AToB::render()
 {
 	float temp_copy = wrap->function_index;
+	/*
 	cv::Point3f last_left;
 	cv::Point3f last_right;
-	TankDriveCalculator::TankOutput output = evaluate(true);
+	TankDriveCalculator::TankOutput output = evaluate();
 	glColor3f(0.0, 0.0, 0.0);
 	glPointSize(9);
 	glBegin(GL_LINES);
@@ -52,7 +53,7 @@ void AToB::render()
 	last_right = output.right_position;
 
 	while(true) {
-		TankDriveCalculator::TankOutput output = evaluate(true);
+		TankDriveCalculator::TankOutput output = evaluate();
 		Renderer::color_by(output.motion.velocity_left);
 		glVertex2f(last_left.x, last_left.y);
 		glVertex2f(output.left_position.x, output.left_position.y);
@@ -67,6 +68,7 @@ void AToB::render()
 		}
 	}
 	glEnd();
+	*/
 
 	wrap->render();
 	wrap->function_index = temp_copy;

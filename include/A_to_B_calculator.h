@@ -29,7 +29,7 @@ class AToB {
 		bool reverse = false;
 		void render();
 
-		TankDriveCalculator::TankOutput evaluate(bool advance);	
+		TankDriveCalculator::TankOutput evaluate();	
 
 	private:
 		SplineWrap* wrap;

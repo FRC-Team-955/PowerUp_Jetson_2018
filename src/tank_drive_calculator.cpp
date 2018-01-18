@@ -1,6 +1,6 @@
 #include <tank_drive_calculator.h>
 
-TankDriveCalculator::TankOutput TankDriveCalculator::evaluate (SQDerivable* function, float wheel_distance, float max_change_time, bool reverse, bool no_advance) {
+TankDriveCalculator::TankOutput TankDriveCalculator::evaluate (SQDerivable* function, float wheel_distance, float max_change_time, bool reverse) {
 		TankOutput output;
 
 		//We hijack the third axis (Z) to use it as a velocity max set point. heh.
@@ -28,6 +28,9 @@ TankDriveCalculator::TankOutput TankDriveCalculator::evaluate (SQDerivable* func
 		//Calculate right speed with some more calculus
 		cv::Point2f dr_right = MiscMath::From3f_xy(function->velocity) - dr_offset_speed;
 		float speed_right = cv::norm(dr_right);
+		std::cout << "P " << function->position << std::endl;
+		std::cout << "V " << function->velocity << std::endl;
+		std::cout << "A " << function->acceleration << std::endl;
 
 		//The max of the two is the farthest distance
 		float speed_max = std::max(speed_left, speed_right);
@@ -63,7 +66,8 @@ TankDriveCalculator::TankOutput TankDriveCalculator::evaluate (SQDerivable* func
 		output.motion.delta_time = max_change_time;
 		output.motion.special = special;
 		output.left_position = function->position + MiscMath::From2f_xy(point_norm_cv, 0.0);
-		output.right_position =function->position - MiscMath::From2f_xy(point_norm_cv, 0.0);
+		output.right_position = function->position - MiscMath::From2f_xy(point_norm_cv, 0.0);
 		output.center_position = MiscMath::From3f_xy(function->position);
+		output.robot_direction = function->evaluate_direction_xy();
 		return output; //Allow further reads if we're not too far
 	}
