@@ -26,7 +26,7 @@ AToB::AToB (float direction_start,
 	input_points.push_back(MiscMath::From2f_xy(leading_b_end, max_allowed_velocity));
 
 	input_points.push_back(MiscMath::From2f_xy(position_end, min_velocity));
-	wrap = new SplineWrap(6, input_points);
+	wrap = new SplineWrap(input_points.size(), input_points);
 
 	this->max_allowed_velocity = max_allowed_velocity;
 	this->max_change_time = max_change_time;
@@ -41,7 +41,8 @@ TankDriveCalculator::TankOutput AToB::evaluate() {
 void AToB::render()
 {
 	float temp_copy = wrap->function_index;
-	/*
+	wrap->function_index = 0.0;
+	wrap->advance(0.0);
 	cv::Point3f last_left;
 	cv::Point3f last_right;
 	TankDriveCalculator::TankOutput output = evaluate();
@@ -63,15 +64,15 @@ void AToB::render()
 		glVertex2f(output.right_position.x, output.right_position.y);
 		last_left = output.left_position;
 		last_right = output.right_position;
-		if (output.motion.special == TankDriveMotionUnit::Special::End) {
+		if (output.motion.special == TankDriveMotionUnit::Special::End)
 			break; //TODO: Add timeout too!
-		}
 	}
 	glEnd();
-	*/
 
 	wrap->render();
+	//TODO: Write non-destructive advance function, or even a stack of different function slots
 	wrap->function_index = temp_copy;
+	wrap->advance(0.0);
 }
 
 AToB::~AToB() {

@@ -28,9 +28,6 @@ TankDriveCalculator::TankOutput TankDriveCalculator::evaluate (SQDerivable* func
 		//Calculate right speed with some more calculus
 		cv::Point2f dr_right = MiscMath::From3f_xy(function->velocity) - dr_offset_speed;
 		float speed_right = cv::norm(dr_right);
-		std::cout << "P " << function->position << std::endl;
-		std::cout << "V " << function->velocity << std::endl;
-		std::cout << "A " << function->acceleration << std::endl;
 
 		//The max of the two is the farthest distance
 		float speed_max = std::max(speed_left, speed_right);
