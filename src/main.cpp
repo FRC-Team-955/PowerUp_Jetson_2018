@@ -1,13 +1,9 @@
 #include <renderer.h>
-#include <goal_path_calculator.h>
-#include <path_calculator.h>
 #include <opencv2/opencv.hpp>
 #include <socket.h>
-#include <multiple_waypoint_path_creator.h>
 #include <field_renderer.h>
 #include <field_dimensions.h>
-#include <shared_network_types.h>
-#include <spline_wrap.h>
+#include <A_to_B_calculator.h>
 
 #define JUST_RENDER true
 
@@ -16,10 +12,9 @@
 //      RX/TX structs layed out WELL (W/ actions or commands emittable by the jetson)
 //      Finish the field rendering class (make it only a namespace?)
 namespace FD = FieldDimension;
-const double pi = std::acos(-1);
 
-void draw_robot_follow_path(Path path);
-bool socket_serve(Path path, SocketServer sock);
+void draw_robot_follow_path(AToB path);
+//bool socket_serve(AToB path, SocketServer sock);
 
 int main () {
 
@@ -31,10 +26,10 @@ int main () {
 
 	while (true) {
 		{
-			Path path = GoalPathCalculator::calculate_path(
-					pi / 2.0, 							//direction start
+			AToB path (
+					MiscMath::pi / 2.0, 							//direction start
 					cv::Point2f(1000.0, 600.0/2.0),  	//position start
-					pi / 2.0,               		//direction end
+					MiscMath::pi / 2.0,               		//direction end
 					FD::Switch::left_plate.tl() + cv::Point2f(FD::Switch::left_plate.width / 2.0, 0.0), 
 					660.0 / 2.0,                  //wheel distance
 					1.0,                    		//max allowed velocity
@@ -44,35 +39,31 @@ int main () {
 #if JUST_RENDER
 			draw_robot_follow_path(path);
 #else
-			socket_serve(path, sock);
+			//socket_serve(path, sock);
 #endif
 		}
 	}
 }
 
-void draw_robot_follow_path(Path path) {
-	TankDriveMotionUnit next;
-	while(path.next_point(&next)) {
+void draw_robot_follow_path(AToB path) {
+	while(true) {
+		TankDriveCalculator::TankOutput output = path.evaluate(true);
 		Renderer::clear();
 		FieldRenderer::render((char*)"LL", false);
 		Renderer::bound(FD::field_bounds, 4.0);
 		Renderer::grid(1000.0, 1000.0, 0.2, 0.2, 0.2, FD::field_bounds);
-
 		path.render();
-		Renderer::render_spline(&path.spline);
 
-		float robot_angle = 0.0;
-		cv::Point2f robot_pos (0.0, 0.0);
-		path.get_current_loc_nondestruct(&robot_pos, &robot_angle);
-		float min = std::max(next.velocity_left, next.velocity_right);
-		Renderer::draw_robot(robot_angle, robot_pos, 700.0, 700.0, -min, min, 0.0);
+		float min = std::max(output.motion.velocity_left, output.motion.velocity_right);
+		Renderer::draw_robot(output.robot_direction, output.center_position, 700.0, 700.0, -min, min, 0.0);
 
 		Renderer::display();
 	}
 }
 
 
-bool socket_serve(Path path, SocketServer sock) {
+/*
+bool socket_serve(AToB path, SocketServer sock) {
 	TankDriveMotionUnit next;
 	do {
 		std::cout << "Writing" << std::endl;
@@ -83,3 +74,4 @@ bool socket_serve(Path path, SocketServer sock) {
 		return true;
 	} while(path.next_point(&next));
 }
+*/

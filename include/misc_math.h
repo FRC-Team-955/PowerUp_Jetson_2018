@@ -22,5 +22,11 @@ namespace MiscMath {
 	cv::Point2f RadialOffset(float radians, float distance, cv::Point2f offset);
 
 	float LineSlope(cv::Point2f a, cv::Point2f b);
-	}
+
+	cv::Point2f From3f_xy(cv::Point3f point);
+
+	cv::Point3f From2f_xy(cv::Point2f point, float z);
+
+	const float pi = std::acos(-1);
+}
 #endif

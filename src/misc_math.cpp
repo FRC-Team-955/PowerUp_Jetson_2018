@@ -40,3 +40,11 @@ float MiscMath::LineSlope(cv::Point2f a, cv::Point2f b) {
 cv::Point2f MiscMath::NormalTo(cv::Point2f input) {
 	return cv::Point2f(-input.y, input.x);
 }
+
+cv::Point2f MiscMath::From3f_xy(cv::Point3f point) {
+	return cv::Point2f(point.x, point.y);
+}
+
+cv::Point3f MiscMath::From2f_xy(cv::Point2f point, float z) {
+	return cv::Point3f(point.x, point.y, z);
+}
