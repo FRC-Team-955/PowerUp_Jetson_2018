@@ -74,7 +74,7 @@ namespace Renderer {
 
 	void draw_robot(float angle, cv::Point2f position, float length, float width, float r, float g, float b) {
 		glColor3f(r, g, b); //TODO: Make this configurable
-		glPointSize(9);
+		glLineWidth(3);
 		std::vector<cv::Point2f> wireframe;
 		wireframe.push_back(cv::Point2f ((length / 2), (width / 2)));
 		wireframe.push_back(cv::Point2f (-(length / 2), (width / 2)));

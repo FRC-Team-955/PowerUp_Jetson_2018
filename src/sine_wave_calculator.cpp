@@ -26,7 +26,7 @@ void SineWaveCalculator::render()
 	cv::Point3f last_right;
 	TankDriveCalculator::TankOutput output = evaluate(true);
 	glColor3f(0.0, 0.0, 0.0);
-	glPointSize(9);
+	glLineWidth(3);
 	glBegin(GL_LINES);
 
 	last_left = output.left_position;
