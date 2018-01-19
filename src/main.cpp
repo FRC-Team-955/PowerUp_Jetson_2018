@@ -31,7 +31,7 @@ int main () {
 		SineWaveCalculator path (
 				cv::Point2f(1000.0, 3000.0), //Start from
 				1000.0,			//Amplitude
-				1000.0,			//Period
+				200.0,			//Period
 				20.0,				//max time step
 				660.0 / 2.0,   //wheel distance
 				2);                   			

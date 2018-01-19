@@ -1,16 +1,12 @@
 #include <spline_wrap.h>
 
-SplineWrap::SplineWrap(int nCtrlp, std::vector<cv::Point3f> points) {
+SplineWrap::SplineWrap(int nCtrlp) {
 	spline = tinyspline::BSpline(nCtrlp, spline_dimension, 3);
-	if (!set_ctrlpts(points)) //TODO: Real error handling
-		ErrorPrinting::print_error("failed to set control points (Not enough!)");
 }
 
 bool SplineWrap::set_ctrlpts(std::vector<cv::Point3f> points) {
-	if (points.size() != spline.nCtrlp()) {
-		std::cout << points.size() << " " << spline_dimension << " " << spline.nCtrlp() << std::endl;
+	if (points.size() != spline.nCtrlp())
 		return false;
-	}
 	std::vector<tinyspline::real> ctrlp;
 	for (auto& point : points) {
 		ctrlp.push_back(point.x);

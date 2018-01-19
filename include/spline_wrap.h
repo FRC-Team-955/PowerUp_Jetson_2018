@@ -10,7 +10,7 @@
 
 class SplineWrap : public SQDerivable {
 	public:
-		SplineWrap(int nCtrlp, std::vector<cv::Point3f> points);
+		SplineWrap(int nCtrlp);
 		bool advance(float index); //Advance function_index by amount, returns true if successful
 		bool is_at_beginning(); 
 

@@ -35,8 +35,8 @@ TankDriveCalculator::TankOutput TankDriveCalculator::evaluate (SQDerivable* func
 		//Find change in angle
 		double change_in_slope = ((function->acceleration.y*function->velocity.x) - (function->acceleration.x*function->velocity.y)) / powf(function->velocity.x, 2.0);
 		double change_in_angle = (1.0 / (1.0 + powf(function->velocity.y / function->velocity.x, 2.0))) * change_in_slope;
-		float reverse_left = change_in_angle > 1.0 ? -1.0 : 1.0;
-		float reverse_right = -change_in_angle > 1.0 ? -1.0 : 1.0;
+		float reverse_left = ((speed_left - speed_center) / wheel_distance > 1.0) && change_in_angle > 0.0 ? -1.0 : 1.0;
+		float reverse_right = ((speed_right - speed_center) / wheel_distance > 1.0) && change_in_angle < 0.0 ? -1.0 : 1.0;
 
 		float absolute_velocity_left = max_allowed_velocity * (speed_left / speed_max) * reverse_left; 
 		float absolute_velocity_right = max_allowed_velocity * (speed_right / speed_max) * reverse_right; 
@@ -44,7 +44,6 @@ TankDriveCalculator::TankOutput TankDriveCalculator::evaluate (SQDerivable* func
 		//Accumulate distances, assuming the longest side always goes one distance unit
 		//traversal->left_accum += absolute_velocity_left * max_change_time;
 		//traversal->right_accum += absolute_velocity_right * max_change_time;
-
 
 		output.motion.position_left = 0.0;//reverse ? -traversal->left_accum : traversal->left_accum;
 		output.motion.velocity_left = reverse ? -absolute_velocity_left : absolute_velocity_left;

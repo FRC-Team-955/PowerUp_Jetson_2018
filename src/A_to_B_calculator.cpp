@@ -26,7 +26,8 @@ AToB::AToB (float direction_start,
 	input_points.push_back(MiscMath::From2f_xy(leading_b_end, max_allowed_velocity));
 
 	input_points.push_back(MiscMath::From2f_xy(position_end, min_velocity));
-	wrap = new SplineWrap(input_points.size(), input_points);
+	wrap = new SplineWrap(input_points.size());
+	wrap->set_ctrlpts(input_points);
 
 	this->max_allowed_velocity = max_allowed_velocity;
 	this->max_change_time = max_change_time;
