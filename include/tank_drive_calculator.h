@@ -16,7 +16,7 @@ namespace TankDriveCalculator {
 		float robot_direction;
 	};
 
-	TankOutput evaluate (SQDerivable* function, float wheel_distance, float max_change_time, bool reverse);
+	TankOutput evaluate (SQDerivable* function, float wheel_distance, float max_change_time, bool reverse, bool advance);
 }
 
 #endif

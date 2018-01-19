@@ -37,10 +37,6 @@ bool SplineWrap::advance(float index) {
 	}
 }
 
-bool SplineWrap::is_at_end() {
-	return fabs(function_index - 1.0) <= 0.01;
-}
-
 bool SplineWrap::is_at_beginning() {
 	return function_index == 0.0;
 }

@@ -4,17 +4,20 @@
 #include <field_renderer.h>
 #include <field_dimensions.h>
 #include <A_to_B_calculator.h>
+#include <sine_wave_calculator.h>
 
 #define JUST_RENDER true
 
-//TODO: Add chaining for paths
+//TODO: Add chaining for paths, or maybe a path stack
 //      RX/TX structs layed out WELL (W/ actions or commands emittable by the jetson)
+//      Add reversing mode for the tank drive calculator
 namespace FD = FieldDimension;
 
 int main () {
 	Renderer::init();
 
 	while (true) {
+		/*
 		AToB path (
 				MiscMath::pi / 2.0, 					//direction start
 				cv::Point2f(1000.0, 600.0/2.0),  //position start
@@ -24,10 +27,16 @@ int main () {
 				1.0,                    			//max allowed velocity
 				20.0,                   			//max time step
 				0.05);                  			//min velocity
-
+				*/
+		SineWaveCalculator path (
+				cv::Point2f(1000.0, 3000.0), //Start from
+				1000.0,			//Amplitude
+				100.0,			//Period
+				20.0,				//max time step
+				660.0 / 2.0,   //wheel distance
+				2);                   			
 
 		while (true) {
-			TankDriveCalculator::TankOutput output = path.evaluate();
 
 			Renderer::clear();
 
@@ -37,14 +46,16 @@ int main () {
 
 			Renderer::grid(1000.0, 1000.0, 0.2, 0.2, 0.2, FD::field_bounds);
 
-			path.render();
-
+			TankDriveCalculator::TankOutput output = path.evaluate(true);
 			Renderer::draw_robot(output.robot_direction, output.center_position, 700.0, 700.0, 0.8, 0.8, 0.8);
+			path.render();
 
 			Renderer::display();
 			if (output.motion.special == TankDriveMotionUnit::Special::End)
 				break;
 		}
+
+			std::cout << "Loop" << std::endl;
 
 	}
 }

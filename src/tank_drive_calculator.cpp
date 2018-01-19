@@ -1,6 +1,6 @@
 #include <tank_drive_calculator.h>
 
-TankDriveCalculator::TankOutput TankDriveCalculator::evaluate (SQDerivable* function, float wheel_distance, float max_change_time, bool reverse) {
+TankDriveCalculator::TankOutput TankDriveCalculator::evaluate (SQDerivable* function, float wheel_distance, float max_change_time, bool reverse, bool advance) {
 		TankOutput output;
 
 		//We hijack the third axis (Z) to use it as a velocity max set point. heh.
@@ -35,8 +35,9 @@ TankDriveCalculator::TankOutput TankDriveCalculator::evaluate (SQDerivable* func
 		//Find change in angle
 		double change_in_slope = ((function->acceleration.y*function->velocity.x) - (function->acceleration.x*function->velocity.y)) / powf(function->velocity.x, 2.0);
 		double change_in_angle = (1.0 / (1.0 + powf(function->velocity.y / function->velocity.x, 2.0))) * change_in_slope;
-		float reverse_left = change_in_angle > MiscMath::pi * 2.0 ? -1.0 : 1.0;
-		float reverse_right = -change_in_angle > MiscMath::pi * 2.0 ? -1.0 : 1.0;
+		float reverse_left = change_in_angle > 1.0 ? -1.0 : 1.0;
+		float reverse_right = -change_in_angle > 1.0 ? -1.0 : 1.0;
+		//std::cout << change_in_angle << std::endl;
 
 		float absolute_velocity_left = max_allowed_velocity * (speed_left / speed_max) * reverse_left; 
 		float absolute_velocity_right = max_allowed_velocity * (speed_right / speed_max) * reverse_right; 
@@ -45,26 +46,29 @@ TankDriveCalculator::TankOutput TankDriveCalculator::evaluate (SQDerivable* func
 		//traversal->left_accum += absolute_velocity_left * max_change_time;
 		//traversal->right_accum += absolute_velocity_right * max_change_time;
 
-		TankDriveMotionUnit::Special special = TankDriveMotionUnit::Special::Middle;
-		if (function->is_at_beginning()) {
-			special = TankDriveMotionUnit::Special::Beginning;
-		}
-
-		function->advance((1.0 / speed_max) * max_allowed_velocity * max_change_time);
-
-		if (function->is_at_end()) {
-			special = TankDriveMotionUnit::Special::End;
-		}
 
 		output.motion.position_left = 0.0;//reverse ? -traversal->left_accum : traversal->left_accum;
 		output.motion.velocity_left = reverse ? -absolute_velocity_left : absolute_velocity_left;
 		output.motion.position_right = 0.0;//reverse ? -traversal->right_accum : traversal->right_accum;
 		output.motion.velocity_right = reverse ? -absolute_velocity_right : absolute_velocity_right;
 		output.motion.delta_time = max_change_time;
-		output.motion.special = special;
 		output.left_position = function->position + MiscMath::From2f_xy(point_norm_cv, 0.0);
 		output.right_position = function->position - MiscMath::From2f_xy(point_norm_cv, 0.0);
 		output.center_position = MiscMath::From3f_xy(function->position);
 		output.robot_direction = function->evaluate_direction_xy();
+
+		TankDriveMotionUnit::Special special = TankDriveMotionUnit::Special::Middle;
+		if (function->is_at_beginning()) {
+			special = TankDriveMotionUnit::Special::Beginning;
+		}
+
+		if (advance) {
+			if (!function->advance((1.0 / speed_max) * max_allowed_velocity * max_change_time)) {
+				special = TankDriveMotionUnit::Special::End;
+			}
+		}
+
+		output.motion.special = special;
+
 		return output; //Allow further reads if we're not too far
-	}
+}

@@ -1,13 +1,13 @@
 #include <A_to_B_calculator.h>
 
 AToB::AToB (float direction_start,
-				cv::Point2f position_start,
-				float direction_end,
-				cv::Point2f position_end,
-				float wheel_distance,
-				float max_allowed_velocity,
-				float max_change_time,
-				float min_velocity) {
+		cv::Point2f position_start,
+		float direction_end,
+		cv::Point2f position_end,
+		float wheel_distance,
+		float max_allowed_velocity,
+		float max_change_time,
+		float min_velocity) {
 	reverse = (position_end - position_start).dot(cv::Point2f(cos(direction_start), sin(direction_start))) < 0;
 
 	std::vector<cv::Point3f> input_points;
@@ -34,10 +34,11 @@ AToB::AToB (float direction_start,
 	this->wheel_distance = wheel_distance;
 }
 
-TankDriveCalculator::TankOutput AToB::evaluate() {
-	return TankDriveCalculator::evaluate(wrap, wheel_distance, max_change_time, reverse);
+TankDriveCalculator::TankOutput AToB::evaluate(bool advance) {
+	return TankDriveCalculator::evaluate(wrap, wheel_distance, max_change_time, reverse, advance);
 }
 
+//TODO: Make this part of tank drive
 void AToB::render()
 {
 	float temp_copy = wrap->function_index;
@@ -45,7 +46,7 @@ void AToB::render()
 	wrap->advance(0.0);
 	cv::Point3f last_left;
 	cv::Point3f last_right;
-	TankDriveCalculator::TankOutput output = evaluate();
+	TankDriveCalculator::TankOutput output = evaluate(true);
 	glColor3f(0.0, 0.0, 0.0);
 	glPointSize(9);
 	glBegin(GL_LINES);
@@ -54,7 +55,7 @@ void AToB::render()
 	last_right = output.right_position;
 
 	while(true) {
-		TankDriveCalculator::TankOutput output = evaluate();
+		TankDriveCalculator::TankOutput output = evaluate(true);
 		Renderer::color_by(output.motion.velocity_left);
 		glVertex2f(last_left.x, last_left.y);
 		glVertex2f(output.left_position.x, output.left_position.y);

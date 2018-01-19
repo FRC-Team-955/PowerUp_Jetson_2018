@@ -1,5 +1,5 @@
-#ifndef A_TO_B_CALCULATOR
-#define A_TO_B_CALCULATOR
+#ifndef A_TO_B_CALCULATOR_H
+#define A_TO_B_CALCULATOR_H
 
 #include <opencv2/opencv.hpp>
 #include <tank_drive_calculator.h>
@@ -29,7 +29,7 @@ class AToB {
 		bool reverse = false;
 		void render();
 
-		TankDriveCalculator::TankOutput evaluate();	
+		TankDriveCalculator::TankOutput evaluate(bool advance);
 
 	private:
 		SplineWrap* wrap;
