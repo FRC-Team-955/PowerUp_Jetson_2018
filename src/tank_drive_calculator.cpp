@@ -37,7 +37,6 @@ TankDriveCalculator::TankOutput TankDriveCalculator::evaluate (SQDerivable* func
 		double change_in_angle = (1.0 / (1.0 + powf(function->velocity.y / function->velocity.x, 2.0))) * change_in_slope;
 		float reverse_left = change_in_angle > 1.0 ? -1.0 : 1.0;
 		float reverse_right = -change_in_angle > 1.0 ? -1.0 : 1.0;
-		//std::cout << change_in_angle << std::endl;
 
 		float absolute_velocity_left = max_allowed_velocity * (speed_left / speed_max) * reverse_left; 
 		float absolute_velocity_right = max_allowed_velocity * (speed_right / speed_max) * reverse_right; 
