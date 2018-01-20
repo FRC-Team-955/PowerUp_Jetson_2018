@@ -34,11 +34,13 @@ namespace Renderer {
 				glVertex3fv(&spline->ctrlp()[spline->dim() * i]);
 			glEnd();
 
+			/*
 			char string_buf[300];
 			for (size_t i = 0; i < spline->nCtrlp() * spline->dim(); i += 3) {
 				sprintf(string_buf, "(%f, %f)", spline->ctrlp()[i], spline->ctrlp()[i + 1]);
 				draw_string(spline->ctrlp()[i], spline->ctrlp()[i + 1], string_buf);
 			}
+			*/
 		}
 	}
 
