@@ -6,7 +6,7 @@
 #include <A_to_B_calculator.h>
 #include <sine_wave_calculator.h>
 
-#define JUST_RENDER true
+#define JUST_RENDER false
 
 //TODO: Add chaining for paths, or maybe a path stack
 //      RX/TX structs layed out WELL (W/ actions or commands emittable by the jetson)
@@ -60,7 +60,7 @@ int main () {
 			output = path.evaluate(true);
 
 			std::cout << "Writing..." << std::endl;
-			sock.write_to(&next, sizeof(Path::TalonPoint));
+			sock.write_to(&output.motion, sizeof(TankDriveCalculator::TankOutput));
 
 			std::cout << "Reading" << std::endl;
 			sock.read_to(&abort, sizeof(bool)); //Read once before we update the spline
