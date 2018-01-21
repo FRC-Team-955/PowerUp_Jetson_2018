@@ -11,7 +11,8 @@ class SQDerivable {
 		cv::Point3f acceleration; //f''(index)
 
 		//returns false if at end
-		virtual bool advance(float index_change) = 0; //Advance index by amount, returns true if successful, and sets position, velocity, etc.
+		//Advance index by amount, returns true if successful, and sets position, velocity, etc.
+		virtual bool advance(float change_in_index) = 0; 
 
 		float evaluate_velocity_magnitude_xy() {
 			return cv::norm(cv::Point2f(velocity.x, velocity.y));
