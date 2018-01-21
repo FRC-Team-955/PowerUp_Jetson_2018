@@ -129,6 +129,56 @@ namespace Renderer {
 		}
 	}
 
+	//TODO: Simplify the crap out of this
+	//      Add a center line
+	//      Find a better way to store progress through the spline
+	void render_function_tank_drive (
+			SQDerivable* function,
+			float wheel_distance, 
+			float max_change_time) {
+		float temp_copy = function->index;
+		function->index = 0.0;
+		function->advance(0.0);
+		cv::Point3f last_left;
+		cv::Point3f last_right;
+		TankDriveCalculator::TankOutput output = TankDriveCalculator::evaluate(
+				function, 
+				wheel_distance, 
+				max_change_time, 
+				false, 
+				true);
+		glColor3f(0.0, 0.0, 0.0);
+		glLineWidth(3);
+		glBegin(GL_LINES);
+
+		last_left = output.left_position;
+		last_right = output.right_position;
+
+		do {
+			output = TankDriveCalculator::evaluate(
+					function, 
+					wheel_distance, 
+					max_change_time, 
+					false, 
+					true);
+			Renderer::color_by(output.motion.velocity_left);
+			glVertex2f(last_left.x, last_left.y);
+			glVertex2f(output.left_position.x, output.left_position.y);
+
+			Renderer::color_by(output.motion.velocity_right);
+			glVertex2f(last_right.x, last_right.y);
+			glVertex2f(output.right_position.x, output.right_position.y);
+			last_left = output.left_position;
+			last_right = output.right_position;
+			std::cout << "Loop" << std::endl;
+		} while (output.motion.special != TankDriveMotionUnit::Special::End);
+		glEnd();
+
+		//TODO: Write non-destructive advance function, or even a stack of different function slots
+		function->index = temp_copy;
+		function->advance(0.0);
+	}
+
 	void bound(cv::Rect2f input, float max_z)
 	{
 		glLoadIdentity();
@@ -140,7 +190,7 @@ namespace Renderer {
 	void display() {
 		glutSwapBuffers();
 		glutPostRedisplay();
- 		glutMainLoopEvent();
+		glutMainLoopEvent();
 	}
 
 	void fake_display () {}

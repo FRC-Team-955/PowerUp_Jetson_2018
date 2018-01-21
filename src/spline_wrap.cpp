@@ -1,6 +1,8 @@
 #include <spline_wrap.h>
 
 SplineWrap::SplineWrap(int nCtrlp) {
+	max_index = 1.0;
+	min_index = 0.0;
 	spline = tinyspline::BSpline(nCtrlp, spline_dimension, 3);
 }
 
@@ -16,29 +18,25 @@ bool SplineWrap::set_ctrlpts(std::vector<cv::Point3f> points) {
 	spline.setCtrlp(ctrlp);
 	spline_derive = spline.derive();
 	spline_derive_sq = spline_derive.derive();
-	function_index = 0.0;
-	advance(0.0);
+	index = min_index;
+	advance(min_index);
 	return true;
 }
 
-bool SplineWrap::advance(float index) {
-	if (function_index + index <= 1.0 && function_index + index >= 0.0) {
-		function_index += index;
-		position = eval_spline_Point3f(&spline, function_index);
-		velocity = eval_spline_Point3f(&spline_derive, function_index);
-		acceleration = eval_spline_Point3f(&spline_derive_sq, function_index);
+bool SplineWrap::advance(float change_in_index) {
+	if (index + change_in_index <= max_index && index + change_in_index >= min_index) {
+		index += change_in_index;
+		position = eval_spline_Point3f(&spline, index);
+		velocity = eval_spline_Point3f(&spline_derive, index);
+		acceleration = eval_spline_Point3f(&spline_derive_sq, index);
 		return true;
 	} else {
 		return false;
 	}
 }
 
-bool SplineWrap::is_at_beginning() {
-	return function_index == 0.0;
-}
-
-cv::Point3f SplineWrap::eval_spline_Point3f(tinyspline::BSpline* sp, float index) {
-	auto eval = sp->evaluate(index).result();
+cv::Point3f SplineWrap::eval_spline_Point3f(tinyspline::BSpline* sp, float change_in_index) {
+	auto eval = sp->evaluate(change_in_index).result();
 	return cv::Point3f(eval[0], eval[1], eval[2]);
 }
 

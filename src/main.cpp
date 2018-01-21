@@ -3,8 +3,8 @@
 #include <socket.h>
 #include <field_renderer.h>
 #include <field_dimensions.h>
-#include <A_to_B_calculator.h>
-#include <sine_wave_calculator.h>
+#include <spline_setup.h>
+#include <tank_drive_calculator.h>
 
 #define JUST_RENDER true
 
@@ -21,25 +21,14 @@ int main () {
 #endif
 
 	while (true) {
-		AToB path (
+		SplineWrap path = SplineSetup::from_ang_pos_pairs (
 				MiscMath::pi / 2.0, 					//direction start
-				cv::Point2f(1000.0, 1000.0), //position start
+				cv::Point2f(1000.0, 1000.0),     //position start
 				MiscMath::pi / 2.0,              //direction end
-				cv::Point2f(2000.0, 3000.0),
-				//FD::Switch::left_plate.tl() + cv::Point2f(FD::Switch::left_plate.width / 2.0, 0.0),  //position end
+				cv::Point2f(2000.0, 3000.0),     //position end
 				660.0 / 2.0,                  	//wheel distance
 				1.0,                    			//max allowed velocity
-				10.0,                   			//max time step
-				0.1);                  			//min velocity
-		/*
-			SineWaveCalculator path (
-			cv::Point2f(1000.0, 3000.0), //Start from
-			1000.0,			//Amplitude
-			660.0 / 2.0,			//Period
-			20.0,				//max time step
-			660.0 / 2.0,   //wheel distance
-			4);            //Repeat 
-			*/
+				0.1);                  				//min velocity
 
 		TankDriveCalculator::TankOutput output;
 #if JUST_RENDER
@@ -48,9 +37,9 @@ int main () {
 			FieldRenderer::render((char*)"LL", false);
 			Renderer::bound(FD::field_bounds, 4.0);
 			Renderer::grid(1000.0, 1000.0, 0.2, 0.2, 0.2, FD::field_bounds);
-			output = path.evaluate(true);
+			output = TankDriveCalculator::evaluate(&path, 660.0 / 2.0, 20.0, false, true);
+			Renderer::render_function_tank_drive(&path, 660.0 / 2.0, 20.0);
 			Renderer::draw_robot(output.robot_direction, output.center_position, 700.0, 700.0, 0.8, 0.8, 0.8);
-			path.render();
 			Renderer::display();
 		} while (output.motion.special != TankDriveMotionUnit::Special::End);
 #else

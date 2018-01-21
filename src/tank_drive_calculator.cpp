@@ -56,7 +56,7 @@ TankDriveCalculator::TankOutput TankDriveCalculator::evaluate (SQDerivable* func
 		output.robot_direction = function->evaluate_direction_xy();
 
 		TankDriveMotionUnit::Special special = TankDriveMotionUnit::Special::Middle;
-		if (function->is_at_beginning()) {
+		if (function->index > function->max_index) {
 			special = TankDriveMotionUnit::Special::Beginning;
 		}
 

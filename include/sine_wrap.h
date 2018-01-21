@@ -1,6 +1,7 @@
 #ifndef SINE_WRAP_H
 #define SINE_WRAP_H
 
+/*
 #include <sq_derivable.h>
 #include <opencv2/opencv.hpp>
 #include <vector>
@@ -18,5 +19,6 @@ class SineWrap : public SQDerivable {
 		size_t repeats;
 		cv::Point2f beginning;
 };
+*/
 
 #endif

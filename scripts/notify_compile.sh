@@ -3,8 +3,7 @@ binary=PowerUp2018
 pushd build
 inotifywait -e modify -r ../src/ ../include/ -m |
 	while read -r x; do
-		echo "FILE: $x"
-		#make
+		make -j
 	done &
 	inotify_pid=$!
 

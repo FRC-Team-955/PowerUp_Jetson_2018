@@ -1,5 +1,6 @@
 #include <sine_wave_calculator.h>
 
+/*
 SineWaveCalculator::SineWaveCalculator (
 		cv::Point2f position_start,
 		float amplitude,
@@ -55,3 +56,4 @@ void SineWaveCalculator::render()
 SineWaveCalculator::~SineWaveCalculator() {
 	delete wrap;
 }
+*/

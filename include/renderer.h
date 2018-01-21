@@ -6,6 +6,8 @@
 #include <vector>
 #include <opencv2/opencv.hpp>
 #include <tinysplinecpp.h>
+#include <tank_drive_calculator.h>
+#include <sq_derivable.h>
 
 namespace Renderer {
 	extern void init();
@@ -19,6 +21,10 @@ namespace Renderer {
 	extern void clear();
 	extern void draw_robot(float angle, cv::Point2f position, float length, float width, float r, float g, float b);
 	extern cv::Rect2f get_spline_size(tinyspline::BSpline* spline);
+	void render_function_tank_drive (
+			SQDerivable* function,
+			float wheel_distance, 
+			float max_change_time);
 	
 } // namespace Renderer
 #endif

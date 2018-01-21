@@ -1,6 +1,7 @@
 #ifndef SINE_WAVE_CALCULATOR_H
 #define SINE_WAVE_CALCULATOR_H
 
+/*
 #include <opencv2/opencv.hpp>
 #include <tank_drive_calculator.h>
 #include <sine_wrap.h>
@@ -32,5 +33,6 @@ class SineWaveCalculator {
 		SineWrap* wrap;
 
 };
+*/
 
 #endif

@@ -1,5 +1,6 @@
 #include <sine_wrap.h>
 
+/*
 SineWrap::SineWrap(cv::Point2f beginning, float amplitude, float period, size_t repeats) {
 	this->amplitude = amplitude;
 	this->period = period;
@@ -23,3 +24,4 @@ bool SineWrap::advance(float index) {
 bool SineWrap::is_at_beginning() {
 	return function_index == 0.0;
 }
+*/
