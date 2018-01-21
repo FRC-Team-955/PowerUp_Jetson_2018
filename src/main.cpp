@@ -6,7 +6,7 @@
 #include <A_to_B_calculator.h>
 #include <sine_wave_calculator.h>
 
-#define JUST_RENDER false
+#define JUST_RENDER true
 
 //TODO: Add chaining for paths, or maybe a path stack
 //      RX/TX structs layed out WELL (W/ actions or commands emittable by the jetson)
