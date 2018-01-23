@@ -170,7 +170,6 @@ namespace Renderer {
 			glVertex2f(output.right_position.x, output.right_position.y);
 			last_left = output.left_position;
 			last_right = output.right_position;
-			std::cout << "Loop" << std::endl;
 		} while (output.motion.special != TankDriveMotionUnit::Special::End);
 		glEnd();
 

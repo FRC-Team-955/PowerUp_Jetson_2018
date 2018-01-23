@@ -3,8 +3,7 @@
 #include <socket.h>
 #include <field_renderer.h>
 #include <field_dimensions.h>
-#include <spline_setup.h>
-#include <multi_wrap.h>
+#include <spline_wrap.h>
 #include <tank_drive_calculator.h>
 
 #define JUST_RENDER true
@@ -22,25 +21,10 @@ int main () {
 #endif
 
 	while (true) {
-		MultiWrap path;
-		auto first = SplineSetup::from_ang_pos_pairs (
-				MiscMath::pi / 2.0, 					//direction start
-				cv::Point2f(1000.0, 1000.0),     //position start
-				MiscMath::pi / 2.0,              //direction end
-				cv::Point2f(2000.0, 3000.0),     //position end
-				660.0 / 2.0,                  	//wheel distance
-				1.0,                    			//max allowed velocity
-				0.1);
-		auto second = SplineSetup::from_ang_pos_pairs (
-				MiscMath::pi / 2.0, 					//direction start
-				cv::Point2f(2000.0, 3000.0),     //position end
-				MiscMath::pi / 2.0,              //direction end
-				cv::Point2f(1000.0, 8000.0),     //position start
-				660.0 / 2.0,                  	//wheel distance
-				1.0,                    			//max allowed velocity
-				0.1);
-		path.push_function(&first);                				//min velocity
-		path.push_function(&second);                				//min velocity
+		SplineWrap path (
+				{ cv::Point2f(1000.0, 1000.0), 0.25, 1.0, MiscMath::pi / 2.0f, 660.0 / 2.0 },
+				{ cv::Point2f(2000.0, 2000.0), 1.0, 0.25, MiscMath::pi / 2.0f, 660.0 / 2.0 }	
+				);	
 
 		TankDriveCalculator::TankOutput output;
 #if JUST_RENDER
@@ -50,7 +34,7 @@ int main () {
 			Renderer::bound(FD::field_bounds, 4.0);
 			Renderer::grid(1000.0, 1000.0, 0.2, 0.2, 0.2, FD::field_bounds);
 			output = TankDriveCalculator::evaluate(&path, 660.0 / 2.0, 20.0, false, true);
-			//Renderer::render_function_tank_drive(&path, 660.0 / 2.0, 20.0);
+			Renderer::render_function_tank_drive(&path, 660.0 / 2.0, 20.0);
 			Renderer::draw_robot(output.robot_direction, output.center_position, 700.0, 700.0, 0.8, 0.8, 0.8);
 			Renderer::display();
 		} while (output.motion.special != TankDriveMotionUnit::Special::End);
