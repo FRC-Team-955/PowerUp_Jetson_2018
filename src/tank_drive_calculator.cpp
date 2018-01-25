@@ -16,7 +16,7 @@ TankDriveCalculator::TankOutput TankDriveCalculator::evaluate (SQDerivable* func
 		cv::Point2f point_norm_cv = (point_norm_raw_cv / speed_center) * wheel_distance;
 
 		//Rate of travel in center over i
-		float dr_speed_center = ((function->acceleration.y * function->velocity.x) + (function->acceleration.x * function->velocity.y)) / speed_center;
+		float dr_speed_center = ((function->acceleration.y * function->velocity.x) - (function->acceleration.x * function->velocity.y)) / speed_center;
 
 		//How much should we move the derivative from the original
 		cv::Point2f dr_offset_speed = (wheel_distance * ((point_norm_raw_sq_cv * speed_center) - (point_norm_raw_cv * dr_speed_center)) / sum_dr_squares);
@@ -53,7 +53,7 @@ TankDriveCalculator::TankOutput TankDriveCalculator::evaluate (SQDerivable* func
 		output.left_position = function->position + MiscMath::From2f_xy(point_norm_cv, 0.0);
 		output.right_position = function->position - MiscMath::From2f_xy(point_norm_cv, 0.0);
 		output.center_position = MiscMath::From3f_xy(function->position);
-		output.robot_direction = function->evaluate_direction_xy();
+		output.robot_direction = function->direction_xy();
 
 		TankDriveMotionUnit::Special special = TankDriveMotionUnit::Special::Middle;
 		if (*index > function->max_index) {
