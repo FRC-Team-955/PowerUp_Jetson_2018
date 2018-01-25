@@ -48,10 +48,14 @@ TankDriveCalculator::TankOutput TankDriveCalculator::evaluate (SQDerivable* func
 			}
 		}
 
+		if (((dp_dj_left - func->velocity_magnitude_xy()) / wheel_distance > 1.0) &&
+				func-> change_in_angle() > 0.0)
+			output.motion.velocity_left *= -1.0;
+
+		if (((dp_dj_right - func->velocity_magnitude_xy()) / wheel_distance > 1.0) &&
+				func-> change_in_angle() < 0.0)
+			output.motion.velocity_right *= -1.0;
 		/*
-		//Find change in angle
-		double change_in_slope = ((func->acceleration.y*func->velocity.x) - (func->acceleration.x*func->velocity.y)) / powf(func->velocity.x, 2.0);
-		double change_in_angle = (1.0 / (1.0 + powf(func->velocity.y / func->velocity.x, 2.0))) * change_in_slope;
 		float reverse_left = ((speed_left - func->velocity_magnitude_xy()) / wheel_distance > 1.0) && change_in_angle > 0.0 ? -1.0 : 1.0;
 		float reverse_right = ((speed_right - func->velocity_magnitude_xy()) / wheel_distance > 1.0) && change_in_angle < 0.0 ? -1.0 : 1.0;
 

@@ -49,6 +49,16 @@ class SQDerivable {
 				/ sum_derivative_squares_xy();
 		}
 
+		//d(slope)/dj
+		float change_in_slope() {
+			return ((acceleration.y * velocity.x) - (acceleration.x * velocity.y)) / powf(velocity.x, 2.0);
+		}
+
+		//d(tan^-1 (y'(j)/x'(j))) / dj
+		float change_in_angle() {
+			return (1.0 / (1.0 + powf(velocity.y / velocity.x, 2.0))) * change_in_slope();
+		}
+
 		float max_index = 0.0;
 		float min_index = 0.0;
 };

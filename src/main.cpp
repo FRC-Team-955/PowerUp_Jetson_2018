@@ -22,8 +22,8 @@ int main () {
 
 	while (true) {
 		SplineWrap path (
-				{ cv::Point2f(1000.0, 1000.0), 0.25, 1.0, MiscMath::pi / 2.0f, 660.0 / 2.0 },
-				{ cv::Point2f(2000.0, 2000.0), 1.0, 0.25, MiscMath::pi / 2.0f, 660.0 / 2.0 }	
+				{ cv::Point2f(1000.0, 3000.0), 0.25, 1.0, MiscMath::pi / 2.0f, 660.0 * 2.0 },
+				{ cv::Point2f(2000.0, 1000.0), 1.0, 0.25, MiscMath::pi / 2.0f, 660.0 * 2.0 }	
 				);	
 
 		TankDriveCalculator::TankOutput output;
