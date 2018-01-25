@@ -6,13 +6,15 @@
 #include <sq_derivable.h>
 #include <misc_math.h>
 
+namespace MM = MiscMath;
+
 namespace TankDriveCalculator {
 
 	struct TankOutput {
 		TankDriveMotionUnit motion;
-		cv::Point3f left_position;
-		cv::Point3f right_position;
-		cv::Point2d center_position;
+		cv::Point2f left_position;
+		cv::Point2f right_position;
+		cv::Point2f center_position;
 		float robot_direction;
 	};
 

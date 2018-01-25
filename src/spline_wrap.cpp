@@ -34,7 +34,6 @@ void SplineWrap::evaluate(float index) {
 	position = eval_spline_Point3f(&spline, index);
 	velocity = eval_spline_Point3f(&spline_derive, index);
 	acceleration = eval_spline_Point3f(&spline_derive_sq, index);
-	std::cout << index << std::endl;
 }
 
 cv::Point3f SplineWrap::eval_spline_Point3f(tinyspline::BSpline* sp, float change_in_index) {

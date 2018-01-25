@@ -38,8 +38,7 @@ int main () {
 			output = TankDriveCalculator::evaluate(&path, 660.0 / 2.0, 20.0, false, true, &index);
 			Renderer::draw_robot(output.robot_direction, output.center_position, 700.0, 700.0, 0.8, 0.8, 0.8);
 
-			//Renderer::render_function_tank_drive(&path, 660.0 / 2.0, 20.0);
-
+			Renderer::render_function_tank_drive(&path, 660.0 / 2.0, 20.0);
 
 			Renderer::display();
 		} while (output.motion.special != TankDriveMotionUnit::Special::End);

@@ -4,7 +4,7 @@
 #include <opencv2/opencv.hpp>
 #include <misc_math.h>
 
-namespace MM = MiscMath;
+using namespace MiscMath;
 
 //TODO: Implement caching of evaluations at any index, refresh caches after advance
 class SQDerivable {
@@ -15,22 +15,14 @@ class SQDerivable {
 
 		//returns false if at end
 		//Advance index by amount, returns true if successful, and sets position, velocity, etc.
-		bool advance(float change_in_index, float *index) {
-			if (*index + change_in_index <= max_index && *index + change_in_index >= min_index) {
-				*index += change_in_index;
-				evaluate(*index);
-				return true;
-			} else {
-				return false;
-			}
-		}
-
 		virtual void evaluate(float index) = 0;
 
+		//The total velocity over dj
 		float velocity_magnitude_xy() {
-			return cv::norm(MM::From3f_xy(velocity));
+			return cv::norm(From3f_xy(velocity));
 		}
 
+		//Derivative of the above (Over dj)
 		float velocity_magnitude_derivative_xy () {
 			return ((acceleration.y * velocity.y) + (acceleration.x * velocity.x)) / velocity_magnitude_xy();
 		}
@@ -47,21 +39,18 @@ class SQDerivable {
 
 		//Normalized perpendicular vector to the tangent line
 		cv::Point2f perpendicular_unit_vector_xy () {
-			return MM::NormalTo(MiscMath::From3f_xy(velocity)) / velocity_magnitude_xy();
+			return NormalTo(From3f_xy(velocity)) / velocity_magnitude_xy();
 		}
 
-		//The position of the unit vector above over dj
+		//The change in position of the unit vector above over dj
 		cv::Point2f perpendicular_unit_vector_derivative_xy () {
-			return ((MM::NormalTo(MiscMath::From3f_xy(velocity)) * velocity_magnitude_xy()) - 
-				(MM::NormalTo(MiscMath::From3f_xy(acceleration)) * velocity_magnitude_derivative_xy())) / sum_derivative_squares_xy();
+			return ((NormalTo(From3f_xy(acceleration)) * velocity_magnitude_xy()) -
+				(NormalTo(From3f_xy(velocity)) * velocity_magnitude_derivative_xy()))
+				/ sum_derivative_squares_xy();
 		}
 
-		//Normalized derivative of the pependicular vector to the tangent line
-		//cv::Poin2f perpendicular_vector_derivative_xy () {
-		//}
-
-		float max_index;
-		float min_index;
+		float max_index = 0.0;
+		float min_index = 0.0;
 };
 
 #endif

@@ -137,8 +137,6 @@ namespace Renderer {
 			float wheel_distance, 
 			float max_change_time) {
 		float index = 0.0;
-		cv::Point3f last_left;
-		cv::Point3f last_right;
 		TankDriveCalculator::TankOutput output = TankDriveCalculator::evaluate(
 				function, 
 				wheel_distance, 
@@ -149,8 +147,8 @@ namespace Renderer {
 		glLineWidth(3);
 		glBegin(GL_LINES);
 
-		last_left = output.left_position;
-		last_right = output.right_position;
+		cv::Point2f last_left = output.left_position;
+		cv::Point2f last_right = output.right_position;
 
 		do {
 			output = TankDriveCalculator::evaluate(
@@ -166,6 +164,7 @@ namespace Renderer {
 			Renderer::color_by(output.motion.velocity_right);
 			glVertex2f(last_right.x, last_right.y);
 			glVertex2f(output.right_position.x, output.right_position.y);
+
 			last_left = output.left_position;
 			last_right = output.right_position;
 		} while (output.motion.special != TankDriveMotionUnit::Special::End);
