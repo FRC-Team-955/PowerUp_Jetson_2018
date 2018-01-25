@@ -6,22 +6,14 @@
 #include <opencv2/opencv.hpp>
 #include <vector>
 #include <renderer.h>
+#include <waypoint.h>
 
 class SplineWrap : public SQDerivable {
 	public:
-		SplineWrap(size_t nCtrlp);
-		bool advance(float change_in_index);
-		struct WayPoint {
-			cv::Point2f position;
-			float velocity_beginning,
-					velocity_end,
-					direction,
-					length;
-			void to_control_points (std::vector<cv::Point3f> &output);
-		};
+		bool advance(float change_in_index, float *index);
 
 		SplineWrap(std::vector<WayPoint> points);
-		SplineWrap(SplineWrap::WayPoint a, SplineWrap::WayPoint b);
+		SplineWrap(WayPoint a, WayPoint b);
 		void set_ctrlpts(std::vector<cv::Point3f> points);
 
 		void render();
@@ -31,6 +23,7 @@ class SplineWrap : public SQDerivable {
 		tinyspline::BSpline spline_derive;
 		tinyspline::BSpline spline_derive_sq;
 		cv::Point3f eval_spline_Point3f(tinyspline::BSpline* sp, float index);
+		void evaluate(float index);
 };
 
 #endif

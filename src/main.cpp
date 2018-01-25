@@ -28,14 +28,19 @@ int main () {
 
 		TankDriveCalculator::TankOutput output;
 #if JUST_RENDER
+		float index = 0.0;
 		do {
 			Renderer::clear();
 			FieldRenderer::render((char*)"LL", false);
 			Renderer::bound(FD::field_bounds, 4.0);
 			Renderer::grid(1000.0, 1000.0, 0.2, 0.2, 0.2, FD::field_bounds);
-			output = TankDriveCalculator::evaluate(&path, 660.0 / 2.0, 20.0, false, true);
-			Renderer::render_function_tank_drive(&path, 660.0 / 2.0, 20.0);
+
+			output = TankDriveCalculator::evaluate(&path, 660.0 / 2.0, 20.0, false, true, &index);
 			Renderer::draw_robot(output.robot_direction, output.center_position, 700.0, 700.0, 0.8, 0.8, 0.8);
+
+			//Renderer::render_function_tank_drive(&path, 660.0 / 2.0, 20.0);
+
+
 			Renderer::display();
 		} while (output.motion.special != TankDriveMotionUnit::Special::End);
 #else

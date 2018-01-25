@@ -1,6 +1,6 @@
 #include <tank_drive_calculator.h>
 
-TankDriveCalculator::TankOutput TankDriveCalculator::evaluate (SQDerivable* function, float wheel_distance, float max_change_time, bool reverse, bool advance) {
+TankDriveCalculator::TankOutput TankDriveCalculator::evaluate (SQDerivable* function, float wheel_distance, float max_change_time, bool reverse, bool advance, float *index) {
 		TankOutput output;
 
 		//We hijack the third axis (Z) to use it as a velocity max set point. heh.
@@ -56,12 +56,12 @@ TankDriveCalculator::TankOutput TankDriveCalculator::evaluate (SQDerivable* func
 		output.robot_direction = function->evaluate_direction_xy();
 
 		TankDriveMotionUnit::Special special = TankDriveMotionUnit::Special::Middle;
-		if (function->index > function->max_index) {
+		if (*index > function->max_index) {
 			special = TankDriveMotionUnit::Special::Beginning;
 		}
 
 		if (advance) {
-			if (!function->advance((1.0 / speed_max) * max_allowed_velocity * max_change_time)) {
+			if (!function->advance((1.0 / speed_max) * max_allowed_velocity * max_change_time, index)) {
 				special = TankDriveMotionUnit::Special::End;
 			}
 		}

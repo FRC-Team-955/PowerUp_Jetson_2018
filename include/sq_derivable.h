@@ -12,7 +12,18 @@ class SQDerivable {
 
 		//returns false if at end
 		//Advance index by amount, returns true if successful, and sets position, velocity, etc.
-		virtual bool advance(float change_in_index) = 0; 
+
+		bool advance(float change_in_index, float *index) {
+			if (*index + change_in_index <= max_index && *index + change_in_index >= min_index) {
+				*index += change_in_index;
+				evaluate(*index);
+				return true;
+			} else {
+				return false;
+			}
+		}
+
+		virtual void evaluate(float index) = 0;
 
 		float evaluate_velocity_magnitude_xy() {
 			return cv::norm(cv::Point2f(velocity.x, velocity.y));
@@ -22,7 +33,6 @@ class SQDerivable {
 			return std::atan2(velocity.y, velocity.x);
 		};
 
-		float index;
 		float max_index;
 		float min_index;
 };

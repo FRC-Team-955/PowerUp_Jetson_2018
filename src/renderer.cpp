@@ -136,9 +136,7 @@ namespace Renderer {
 			SQDerivable* function,
 			float wheel_distance, 
 			float max_change_time) {
-		float temp_copy = function->index;
-		function->index = 0.0;
-		function->advance(0.0);
+		float index = 0.0;
 		cv::Point3f last_left;
 		cv::Point3f last_right;
 		TankDriveCalculator::TankOutput output = TankDriveCalculator::evaluate(
@@ -146,7 +144,7 @@ namespace Renderer {
 				wheel_distance, 
 				max_change_time, 
 				false, 
-				true);
+				true, &index);
 		glColor3f(0.0, 0.0, 0.0);
 		glLineWidth(3);
 		glBegin(GL_LINES);
@@ -160,7 +158,7 @@ namespace Renderer {
 					wheel_distance, 
 					max_change_time, 
 					false, 
-					true);
+					true, &index);
 			Renderer::color_by(output.motion.velocity_left);
 			glVertex2f(last_left.x, last_left.y);
 			glVertex2f(output.left_position.x, output.left_position.y);
@@ -174,8 +172,6 @@ namespace Renderer {
 		glEnd();
 
 		//TODO: Write non-destructive advance function, or even a stack of different function slots
-		function->index = temp_copy;
-		function->advance(0.0);
 	}
 
 	void bound(cv::Rect2f input, float max_z)
