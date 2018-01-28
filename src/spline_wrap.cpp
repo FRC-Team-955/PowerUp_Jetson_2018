@@ -4,15 +4,15 @@ SplineWrap::SplineWrap(WayPoint a, WayPoint b) {
 	max_index = 1.0;
 	min_index = 0.0;
 	std::vector<cv::Point3f> control_points;
-	a.to_control_points(control_points);
-	b.to_control_points(control_points);
+	a.to_control_points(control_points, false);
+	b.to_control_points(control_points, true);
 	set_ctrlpts(control_points);
 }
 
 SplineWrap::SplineWrap(std::vector<WayPoint> waypoints) {
 	std::vector<cv::Point3f> control_points;
 	for (auto& waypoint : waypoints)
-		waypoint.to_control_points(control_points);
+		waypoint.to_control_points(control_points, false);
 	set_ctrlpts(control_points);
 }
 

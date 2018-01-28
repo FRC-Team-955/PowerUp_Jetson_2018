@@ -75,7 +75,7 @@ namespace Renderer {
 	}
 
 	void draw_robot(float angle, cv::Point2f position, float length, float width, float r, float g, float b) {
-		glColor3f(r, g, b); //TODO: Make this configurable
+		glColor3f(r, g, b);
 		glLineWidth(3);
 		std::vector<cv::Point2f> wireframe;
 		wireframe.push_back(cv::Point2f ((length / 2), (width / 2)));
@@ -94,6 +94,8 @@ namespace Renderer {
 			glVertex2f(last.x + position.x, last.y + position.y);
 			last = point;
 		}
+		glVertex2f(position.x, position.y);
+		glVertex2f(position.x + (cos(angle) * (length / 2.0)), position.y + (sin(angle) * (length / 2.0)));
 		glEnd();
 	}
 
@@ -132,47 +134,7 @@ namespace Renderer {
 	//TODO: Simplify the crap out of this
 	//      Add a center line
 	//      Find a better way to store progress through the spline
-	void render_function_tank_drive (
-			SQDerivable* function,
-			float wheel_distance, 
-			float max_change_time) {
-		float index = 0.0;
-		TankDriveCalculator::TankOutput output = TankDriveCalculator::evaluate(
-				function, 
-				wheel_distance, 
-				max_change_time, 
-				false, 
-				true, &index);
-		glColor3f(0.0, 0.0, 0.0);
-		glLineWidth(3);
-		glBegin(GL_LINES);
-
-		cv::Point2f last_left = output.left_position;
-		cv::Point2f last_right = output.right_position;
-
-		do {
-			output = TankDriveCalculator::evaluate(
-					function, 
-					wheel_distance, 
-					max_change_time, 
-					false, 
-					true, &index);
-			Renderer::color_by(output.motion.velocity_left);
-			glVertex2f(last_left.x, last_left.y);
-			glVertex2f(output.left_position.x, output.left_position.y);
-
-			Renderer::color_by(output.motion.velocity_right);
-			glVertex2f(last_right.x, last_right.y);
-			glVertex2f(output.right_position.x, output.right_position.y);
-
-			last_left = output.left_position;
-			last_right = output.right_position;
-		} while (output.motion.special != TankDriveMotionUnit::Special::End);
-		glEnd();
-
-		//TODO: Write non-destructive advance function, or even a stack of different function slots
-	}
-
+	//TODO: Move this to the TankDriveCalculator class
 	void bound(cv::Rect2f input, float max_z)
 	{
 		glLoadIdentity();

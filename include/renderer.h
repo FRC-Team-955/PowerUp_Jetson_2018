@@ -6,7 +6,6 @@
 #include <vector>
 #include <opencv2/opencv.hpp>
 #include <tinysplinecpp.h>
-#include <tank_drive_calculator.h>
 #include <sq_derivable.h>
 
 namespace Renderer {
