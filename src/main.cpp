@@ -22,26 +22,45 @@ int main () {
 
 	while (true) {
 		bool rev = true; 
-		TankDriveCalculator calc (SplineWrap (
-					{ cv::Point2f(1000.0, 3000.0), 0.25, 1.0, MiscMath::pi / 2.0f, 660.0 * 2.0, rev },
-					{ cv::Point2f(2000.0, 1000.0), 0.25, 1.0, MiscMath::pi / 2.0f, 660.0 * 2.0, rev }
-					), 660.0 / 2.0, 20.0, rev);	
+		std::vector<TankDriveCalculator> full_path;
+		cv::Point2f w1 (1000.0, 5000.0);
+		cv::Point2f w2 (2000.0, 1000.0);
+		cv::Point2f w3 (4000.0, 4000.0);
+		full_path.push_back(TankDriveCalculator (SplineWrap (
+						{ w1, 1.0, 1.0, MiscMath::pi / 2.0f, 660.0 * 2.0, rev },
+						{ w2, 0.25, 1.0, MiscMath::pi / 2.0f, 660.0 * 2.0, rev }
+						), 660.0 / 2.0, 20.0, rev));	
+
+		full_path.push_back(TankDriveCalculator (SplineWrap (
+						{ w2, 0.25, 1.0, MiscMath::pi / 2.0f, 660.0 * 2.0, false },
+						{ w3, 0.25, 1.0, MiscMath::pi / 2.0f, 660.0 * 2.0, false }
+						), 660.0 / 2.0, 20.0, false));	
+
+		full_path.push_back(TankDriveCalculator (SplineWrap (
+						{ w3, 0.25, 1.0, MiscMath::pi / 2.0f, 660.0 * 2.0, true },
+						{ w1, 1.0, 1.0, MiscMath::pi / 2.0f, 660.0 * 2.0, true }
+						), 660.0 / 2.0, 20.0, true));	
 
 		TankDriveCalculator::TankOutput output;
 #if JUST_RENDER
-		do {
-			Renderer::clear();
-			FieldRenderer::render((char*)"LL", false);
-			Renderer::bound(FD::field_bounds, 4.0);
-			Renderer::grid(1000.0, 1000.0, 0.2, 0.2, 0.2, FD::field_bounds);
+		for (auto& path : full_path) {
+			do {
+				Renderer::clear();
+				Renderer::bound(FD::field_bounds, 4.0);
+				Renderer::grid(1000.0, 1000.0, 0.2, 0.2, 0.2, cv::Rect(0,0,6500,6500));
+				//Renderer::grid(1000.0, 1000.0, 0.2, 0.2, 0.2, FD::field_bounds);
+				//FieldRenderer::render((char*)"LL", false);
 
-			output = calc.evaluate(true);
+				output = path.evaluate(true);
 
-			calc.render();
-			calc.render_robot();
+				for (auto& path_render : full_path)
+					path_render.render();
 
-			Renderer::display();
-		} while (output.motion.special != TankDriveMotionUnit::Special::End);
+				path.render_robot();
+
+				Renderer::display();
+			} while (output.motion.special != TankDriveMotionUnit::Special::End);
+		}
 #else
 		bool abort;
 		do {

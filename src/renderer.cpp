@@ -74,30 +74,6 @@ namespace Renderer {
 		}
 	}
 
-	void draw_robot(float angle, cv::Point2f position, float length, float width, float r, float g, float b) {
-		glColor3f(r, g, b);
-		glLineWidth(3);
-		std::vector<cv::Point2f> wireframe;
-		wireframe.push_back(cv::Point2f ((length / 2), (width / 2)));
-		wireframe.push_back(cv::Point2f (-(length / 2), (width / 2)));
-		wireframe.push_back(cv::Point2f (-(length / 2), -(width / 2)));
-		wireframe.push_back(cv::Point2f ((length / 2), -(width / 2)));
-
-		cv::Mat rot_mat( 2, 3, CV_32FC1 );
-   	rot_mat = cv::getRotationMatrix2D(cv::Point2f(0.0, 0.0), -angle * (180.0 / acos(-1)), 1.0);
-		cv::transform(wireframe, wireframe, rot_mat);
-
-		cv::Point2f last = wireframe.back();
-		glBegin(GL_LINES);
-		for (auto& point : wireframe) {
-			glVertex2f(point.x + position.x, point.y + position.y);
-			glVertex2f(last.x + position.x, last.y + position.y);
-			last = point;
-		}
-		glVertex2f(position.x, position.y);
-		glVertex2f(position.x + (cos(angle) * (length / 2.0)), position.y + (sin(angle) * (length / 2.0)));
-		glEnd();
-	}
 
 	void grid(float step_x, float step_y, float r, float g, float b, cv::Rect2f screen_dim)
 	{

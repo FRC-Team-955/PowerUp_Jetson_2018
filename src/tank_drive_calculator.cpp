@@ -115,6 +115,10 @@ void TankDriveCalculator::render_robot() {
 		last = point;
 	}
 	glVertex2f(function.position.x, function.position.y);
-	glVertex2f(function.position.x + (cos(function.direction_xy()) * (wheel_distance)), function.position.y + (sin(function.direction_xy()) * (wheel_distance)));
+	if (reverse) {
+		glVertex2f(function.position.x - (cos(function.direction_xy()) * (wheel_distance)), function.position.y - (sin(function.direction_xy()) * (wheel_distance)));
+	} else {
+		glVertex2f(function.position.x + (cos(function.direction_xy()) * (wheel_distance)), function.position.y + (sin(function.direction_xy()) * (wheel_distance)));
+	}
 	glEnd();
 }
