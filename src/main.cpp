@@ -17,28 +17,35 @@ int main () {
 #if JUST_RENDER
 	Renderer::init();
 #else
-	SocketServer sock(5070);
+	SocketServer sock(5801);
 #endif
 
+	const float wheel_width = 660.0;
 	while (true) {
-		bool rev = true; 
 		std::vector<TankDriveCalculator> full_path;
-		cv::Point2f w1 (1000.0, 5000.0);
-		cv::Point2f w2 (2000.0, 1000.0);
-		cv::Point2f w3 (4000.0, 4000.0);
+		cv::Point2f start_point (2000.0, 1000.0);
+		cv::Point2f mid_point (1000.0, 3000.0);
+		cv::Point2f end_point (1000.0, 5000.0);
 		full_path.push_back(TankDriveCalculator (SplineWrap (
-						{ w1, 1.0, 1.0, MiscMath::pi / 2.0f, 660.0 * 2.0, rev },
-						{ w2, 0.25, 1.0, MiscMath::pi / 2.0f, 660.0 * 2.0, rev }
-						), 660.0 / 2.0, 20.0, rev));	
-
-		full_path.push_back(TankDriveCalculator (SplineWrap (
-						{ w2, 0.25, 1.0, MiscMath::pi / 2.0f, 660.0 * 2.0, false },
-						{ w3, 0.25, 1.0, MiscMath::pi / 2.0f, 660.0 * 2.0, false }
+						{ start_point, 1.0, 1.0, MiscMath::pi / 2.0f, wheel_width, false },
+						{ FieldDimension::Switch::front_center_left - cv::Point2f(0.0, wheel_width / 2.0f), 0.25, 1.0, MiscMath::pi / 2.0f, wheel_width, false }
 						), 660.0 / 2.0, 20.0, false));	
 
 		full_path.push_back(TankDriveCalculator (SplineWrap (
-						{ w3, 0.25, 1.0, MiscMath::pi / 2.0f, 660.0 * 2.0, true },
-						{ w1, 1.0, 1.0, MiscMath::pi / 2.0f, 660.0 * 2.0, true }
+						{ FieldDimension::Switch::front_center_left - cv::Point2f(0.0, wheel_width / 2.0f), 0.25, 1.0, MiscMath::pi / 2.0f, wheel_width, true },
+						{ mid_point, 1.0, 1.0, (3.0f * MiscMath::pi) / 2.0f, wheel_width, true }
+						), 660.0 / 2.0, 20.0, true));	
+
+
+		full_path.push_back(TankDriveCalculator (SplineWrap (
+						{ mid_point, 1.0, 1.0, (3.0f * MiscMath::pi) / 2.0f, wheel_width, true },
+						{ end_point, 1.0, 1.0, (3.0f * MiscMath::pi) / 2.0f, wheel_width, true }
+						), 660.0 / 2.0, 20.0, true));	
+
+
+		full_path.push_back(TankDriveCalculator (SplineWrap (
+						{ end_point, 1.0, 1.0, (3.0f * MiscMath::pi) / 2.0f, wheel_width, true },
+						{ FieldDimension::Scale::front_center_left - cv::Point2f(0.0, wheel_width / 2.0f), 0.25, 1.0, (3.0f * MiscMath::pi) / 2.0f, wheel_width, true }
 						), 660.0 / 2.0, 20.0, true));	
 
 		TankDriveCalculator::TankOutput output;
@@ -47,9 +54,9 @@ int main () {
 			do {
 				Renderer::clear();
 				Renderer::bound(FD::field_bounds, 4.0);
-				Renderer::grid(1000.0, 1000.0, 0.2, 0.2, 0.2, cv::Rect(0,0,6500,6500));
-				//Renderer::grid(1000.0, 1000.0, 0.2, 0.2, 0.2, FD::field_bounds);
-				//FieldRenderer::render((char*)"LL", false);
+				//Renderer::grid(1000.0, 1000.0, 0.2, 0.2, 0.2, cv::Rect(0, 0, 6500, 6500));
+				Renderer::grid(1000.0, 1000.0, 0.2, 0.2, 0.2, FD::field_bounds);
+				FieldRenderer::render((char*)"LL", false);
 
 				output = path.evaluate(true);
 

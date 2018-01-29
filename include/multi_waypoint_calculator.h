@@ -7,10 +7,9 @@
 
 class MultiWaypointCalculator : SQDerivable {
 	public:
-		MultiWaypointCalculator(std::vector<WayPoint> path);		
+		MultiWaypointCalculator();		
 		void render();
 
-		//void replace_current_start(WayPoint surrogate);
 	private:
 		float wheel_distance;
 		float max_change_time;

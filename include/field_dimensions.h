@@ -37,6 +37,8 @@ namespace FieldDimension {
 				plate_vertical_offset + (plate_height / 2.0) - (boom_height / 2.0),
 				boom_width,
 				boom_height);
+
+		const cv::Point2f front_center_left ((left_plate.br().x + left_plate.tl().x) / 2.0, left_plate.tl().y);
 	}
 	
 	namespace Scale {
@@ -62,6 +64,8 @@ namespace FieldDimension {
 				plate_vertical_offset + (plate_height / 2.0) - (boom_height / 2.0),
 				boom_width,
 				boom_height);
+
+		const cv::Point2f front_center_left ((left_plate.br().x + left_plate.tl().x) / 2.0, left_plate.tl().y);
 	}
 
 }
