@@ -4,14 +4,19 @@
 #include <misc_math.h>
 #include <opencv2/opencv.hpp>
 #include <shared_network_types.h>
-#include <spline_wrap.h>
+#include <sq_derivable.h>
+#include <renderer.h>
+
+#include <GL/freeglut.h>
+#include <GL/gl.h>
+#include <GL/glu.h>
 
 namespace MM = MiscMath;
 
 class TankDriveCalculator {
 	public:
 		TankDriveCalculator(
-				SplineWrap function,
+				SQDerivable& function,
 				float wheel_distance,
 				float time_step,
 				bool reverse)
@@ -32,7 +37,7 @@ class TankDriveCalculator {
 	private:
 		float index = 0.0;
 		TankOutput evaluate(float *index, bool advance);
-		SplineWrap function; // TODO: Make this useful with any SQ_Derivable
+		SQDerivable& function; // TODO: Make this useful with any SQ_Derivable
 		float wheel_distance;
 		float time_step;
 		bool reverse;

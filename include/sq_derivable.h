@@ -59,7 +59,7 @@ class SQDerivable {
 			return (1.0 / (1.0 + powf(velocity.y / velocity.x, 2.0))) * change_in_slope();
 		}
 
-		float max_index = 0.0;
+		float max_index = 1.0;
 		float min_index = 0.0;
 };
 

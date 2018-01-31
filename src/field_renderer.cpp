@@ -14,8 +14,8 @@ void FieldRenderer::render(char* config, bool we_are_blue) {
 
 	//Scale
 	render_rect(FD::Scale::boom, grey);
-	render_rect(FD::Scale::left_plate, (we_are_blue == (config[0] == 'L')) ? blue : red);
-	render_rect(FD::Scale::right_plate, (we_are_blue == (config[0] == 'R')) ? blue : red);
+	render_rect(FD::Scale::left_plate, (we_are_blue == (config[1] == 'L')) ? blue : red);
+	render_rect(FD::Scale::right_plate, (we_are_blue == (config[1] == 'R')) ? blue : red);
 }
 
 void FieldRenderer::render_rect(cv::Rect2f input, cv::Point3f rgb) {
