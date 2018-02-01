@@ -38,7 +38,7 @@ int main () {
 				0.25, 1.0, MM::pi / 2.0f, wheel_width });
 		for (int i = 0; i < 3; i++) {
 			path.push_back( {cv::Point2f(1000.0 + random_float() * (FD::field_width - 1000.0), 1000.0 + random_float() * (FD::field_height - 2000.0)), 
-					1.0, 1.0, random_float() * MM::pi * 2.0f, wheel_width }, true);
+					1.0, 1.0, random_float() * MM::pi * 2.0f, wheel_width }, random_float() > 0.5f);
 		}
 
 		TankDriveCalculator::TankOutput output;
