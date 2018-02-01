@@ -12,7 +12,6 @@ struct WayPoint {
 			velocity_end,
 			direction,
 			length;
-	bool reverse; //Flip the direction of this point
 	void to_control_points (std::vector<cv::Point3f> &output, bool invert);
 };
 

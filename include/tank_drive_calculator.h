@@ -11,12 +11,14 @@
 #include <GL/gl.h>
 #include <GL/glu.h>
 
+#include <memory>
+
 namespace MM = MiscMath;
 
 class TankDriveCalculator {
 	public:
 		TankDriveCalculator(
-				SQDerivable& function,
+				std::shared_ptr<SQDerivable> function,
 				float wheel_distance,
 				float time_step,
 				bool reverse)
@@ -37,7 +39,7 @@ class TankDriveCalculator {
 	private:
 		float index = 0.0;
 		TankOutput evaluate(float *index, bool advance);
-		SQDerivable& function; // TODO: Make this useful with any SQ_Derivable
+		std::shared_ptr<SQDerivable> function; // TODO: Make this useful with any SQ_Derivable
 		float wheel_distance;
 		float time_step;
 		bool reverse;

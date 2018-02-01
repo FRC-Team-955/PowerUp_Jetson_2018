@@ -7,17 +7,17 @@ TankDriveCalculator::TankOutput TankDriveCalculator::evaluate(bool advance) {
 TankDriveCalculator::TankOutput TankDriveCalculator::evaluate (float *index, bool advance) {
 		TankOutput output;
 
-		function.evaluate(*index); //We hijack the third axis (Z) to use it as a velocity max set point. heh.
-		float max_allowed_velocity = function.position.z;
+		function->evaluate(*index); //We hijack the third axis (Z) to use it as a velocity max set point. heh.
+		float max_allowed_velocity = function->position.z;
 
 		//Position = center + (perpendicular vector * d)
-		output.center_position = MM::From3f_xy(function.position);
-		output.left_position = MM::From3f_xy(function.position) + (wheel_distance * function.perpendicular_unit_vector_xy());
-		output.right_position = MM::From3f_xy(function.position) - (wheel_distance * function.perpendicular_unit_vector_xy());
+		output.center_position = MM::From3f_xy(function->position);
+		output.left_position = MM::From3f_xy(function->position) + (wheel_distance * function->perpendicular_unit_vector_xy());
+		output.right_position = MM::From3f_xy(function->position) - (wheel_distance * function->perpendicular_unit_vector_xy());
 
 		//Derivative of the above
-		float dp_dj_left = cv::norm(MM::From3f_xy(function.velocity) + (wheel_distance * function.perpendicular_unit_vector_derivative_xy()));
-		float dp_dj_right = cv::norm(MM::From3f_xy(function.velocity) - (wheel_distance * function.perpendicular_unit_vector_derivative_xy()));
+		float dp_dj_left = cv::norm(MM::From3f_xy(function->velocity) + (wheel_distance * function->perpendicular_unit_vector_derivative_xy()));
+		float dp_dj_right = cv::norm(MM::From3f_xy(function->velocity) - (wheel_distance * function->perpendicular_unit_vector_derivative_xy()));
 
 		//Find dj for the time step
 		float largest_dp_dj = std::max(dp_dj_left, dp_dj_right);
@@ -36,19 +36,19 @@ TankDriveCalculator::TankOutput TankDriveCalculator::evaluate (float *index, boo
 
 		output.motion.delta_time = time_step;
 
-		output.robot_direction = function.direction_xy();
+		output.robot_direction = function->direction_xy();
 
 		output.motion.position_left = 0.0;
 		output.motion.position_right = 0.0;
 
-		if (*index > function.max_index) {
+		if (*index > function->max_index) {
 			output.motion.special = TankDriveMotionUnit::Special::Beginning;
 		} else {
 			output.motion.special = TankDriveMotionUnit::Special::Middle;
 		}
 
 		if (advance) {
-			if (*index + dj >= function.max_index || *index + dj <= function.min_index) {
+			if (*index + dj >= function->max_index || *index + dj <= function->min_index) {
 				output.motion.special = TankDriveMotionUnit::Special::End;
 			} else {
 				*index += fabs(dj);
@@ -56,12 +56,12 @@ TankDriveCalculator::TankOutput TankDriveCalculator::evaluate (float *index, boo
 		}
 
 		//Hard turns (Where one motor's velocity more than doubles the other's velocity) need to reverse one motor
-		if (((dp_dj_left - function.velocity_magnitude_xy()) / wheel_distance > 1.0) &&
-				function. change_in_angle() > 0.0)
+		if (((dp_dj_left - function->velocity_magnitude_xy()) / wheel_distance > 1.0) &&
+				function-> change_in_angle() > 0.0)
 			output.motion.velocity_left *= -1.0;
 
-		if (((dp_dj_right - function.velocity_magnitude_xy()) / wheel_distance > 1.0) &&
-				function. change_in_angle() < 0.0)
+		if (((dp_dj_right - function->velocity_magnitude_xy()) / wheel_distance > 1.0) &&
+				function-> change_in_angle() < 0.0)
 			output.motion.velocity_right *= -1.0;
 
 		return output;
@@ -104,21 +104,21 @@ void TankDriveCalculator::render_robot() {
 	wireframe.push_back(cv::Point2f ((wheel_distance), -(wheel_distance)));
 
 	cv::Mat rot_mat( 2, 3, CV_32FC1 );
-	rot_mat = cv::getRotationMatrix2D(cv::Point2f(0.0, 0.0), -function.direction_xy() * (180.0 / acos(-1)), 1.0);
+	rot_mat = cv::getRotationMatrix2D(cv::Point2f(0.0, 0.0), -function->direction_xy() * (180.0 / acos(-1)), 1.0);
 	cv::transform(wireframe, wireframe, rot_mat);
 
 	cv::Point2f last = wireframe.back();
 	glBegin(GL_LINES);
 	for (auto& point : wireframe) {
-		glVertex2f(point.x + function.position.x, point.y + function.position.y);
-		glVertex2f(last.x + function.position.x, last.y + function.position.y);
+		glVertex2f(point.x + function->position.x, point.y + function->position.y);
+		glVertex2f(last.x + function->position.x, last.y + function->position.y);
 		last = point;
 	}
-	glVertex2f(function.position.x, function.position.y);
+	glVertex2f(function->position.x, function->position.y);
 	if (reverse) {
-		glVertex2f(function.position.x - (cos(function.direction_xy()) * (wheel_distance)), function.position.y - (sin(function.direction_xy()) * (wheel_distance)));
+		glVertex2f(function->position.x - (cos(function->direction_xy()) * (wheel_distance)), function->position.y - (sin(function->direction_xy()) * (wheel_distance)));
 	} else {
-		glVertex2f(function.position.x + (cos(function.direction_xy()) * (wheel_distance)), function.position.y + (sin(function.direction_xy()) * (wheel_distance)));
+		glVertex2f(function->position.x + (cos(function->direction_xy()) * (wheel_distance)), function->position.y + (sin(function->direction_xy()) * (wheel_distance)));
 	}
 	glEnd();
 }
