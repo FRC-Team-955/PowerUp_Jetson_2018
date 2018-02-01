@@ -1,8 +1,5 @@
 #include <multi_waypoint_calculator.h>
 
-MultiWaypointCalculator::MultiWaypointCalculator(float wheel_distance, float max_change_time) : wheel_distance(wheel_distance), max_change_time(max_change_time) {
-}
-
 void MultiWaypointCalculator::reset_and_begin(WayPoint input) {
 	path.clear();
 	beginning = input;
@@ -22,28 +19,43 @@ bool MultiWaypointCalculator::evaluate(TankDriveCalculator::TankOutput &output) 
 	}
 }
 
-void MultiWaypointCalculator::replace_current(WayPoint input) {
+bool MultiWaypointCalculator::replace_current(WayPoint input) {
 	if (path.size() > 0) {
+		WayPoint end = path.back().end;
+		bool reverse = path.back().reverse;
+		TankDriveCalculator calc (
+			std::make_shared<SplineWrap> (input, end),
+			wheel_distance,
+			max_change_time,
+			reverse );
 		path.pop_back();	
-		push(input, true);
+		path.push_back( { calc, end, reverse } );
+		return true;
+	} else {
+		return false;
 	}
 }
 
-void MultiWaypointCalculator::push(WayPoint input, bool back) {
+bool MultiWaypointCalculator::push_back(WayPoint input, bool reverse, bool back) {
 	WayPoint start; 
 	if (path.size() == 0) {
-		start = beginning;
+		if (beginning) {
+			start = beginning.value();
+		} else {
+			return false;
+		}
 	} else {
-		start = path.back().end;
+		start = path.front().end;
 	}
 
-	auto spline = std::make_shared<SplineWrap> (start, input);
-	TankDriveCalculator calc (spline, wheel_distance, max_change_time, false );
-	if (back) {
-		path.push_back( { calc, input } );
-	} else {
-		path.push_front( { calc, input } );
-	}
+	TankDriveCalculator calc (
+			std::make_shared<SplineWrap> (start, input),
+			wheel_distance,
+			max_change_time,
+			reverse );
+
+	path.push_front( { calc, input, reverse } );
+	return true;
 }
 
 void MultiWaypointCalculator::render() {
