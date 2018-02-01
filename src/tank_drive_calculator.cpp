@@ -27,12 +27,6 @@ bool TankDriveCalculator::evaluate (TankDriveCalculator::TankOutput& output, flo
 		output.motion.velocity_left = (dj * dp_dj_left) / time_step;
 		output.motion.velocity_right = (dj * dp_dj_right) / time_step;
 
-		//Should we completely reverse the bot?
-		if (reverse) {
-			output.motion.velocity_left *= -1.0;
-			output.motion.velocity_right *= -1.0;
-		}
-
 		output.motion.delta_time = time_step;
 
 		output.robot_direction = function->direction_xy();
@@ -40,7 +34,7 @@ bool TankDriveCalculator::evaluate (TankDriveCalculator::TankOutput& output, flo
 		output.motion.position_left = 0.0;
 		output.motion.position_right = 0.0;
 
-		index += fabs(dj);
+		index += dj;
 
 		//Hard turns (Where one motor's velocity more than doubles the other's velocity) need to reverse one motor
 		if (((dp_dj_left - function->velocity_magnitude_xy()) / wheel_distance > 1.0) &&
@@ -58,7 +52,7 @@ bool TankDriveCalculator::evaluate (TankDriveCalculator::TankOutput& output, flo
 }
 
 void TankDriveCalculator::render() {
-	float render_index = 0.0;
+	float render_index = function->start_index;
 	TankDriveCalculator::TankOutput output;
 
 	evaluate(output, render_index, true);
@@ -108,10 +102,6 @@ void TankDriveCalculator::render_robot() {
 		last = point;
 	}
 	glVertex2f(function->position.x, function->position.y);
-	if (reverse) {
-		glVertex2f(function->position.x - (cos(function->direction_xy()) * (wheel_distance)), function->position.y - (sin(function->direction_xy()) * (wheel_distance)));
-	} else {
-		glVertex2f(function->position.x + (cos(function->direction_xy()) * (wheel_distance)), function->position.y + (sin(function->direction_xy()) * (wheel_distance)));
-	}
+	glVertex2f(function->position.x + (cos(function->direction_xy()) * (wheel_distance)), function->position.y + (sin(function->direction_xy()) * (wheel_distance)));
 	glEnd();
 }

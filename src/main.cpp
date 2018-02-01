@@ -4,12 +4,6 @@
 #include <opencv2/opencv.hpp>
 #include <renderer.h>
 #include <socket.h>
-/*
-#include <circle_wrap.h>
-#include <spiral_wrap.h>
-#include <spline_wrap.h>
-#include <tank_drive_calculator.h>
-*/
 
 #define JUST_RENDER true
 
@@ -71,6 +65,6 @@ int main() {
 		sock.read_to(&abort,
 				sizeof(bool)); // Read once before we update the spline
 #endif
-		//}
-}
+	}
+	//}
 }

@@ -23,7 +23,9 @@ class TankDriveCalculator {
 				float time_step,
 				bool reverse)
 			: function(function), wheel_distance(wheel_distance),
-			time_step(time_step), reverse(reverse) {}
+			time_step(time_step) {
+				index = function->start_index;
+			}
 		struct TankOutput {
 			TankDriveMotionUnit motion;
 			cv::Point2f left_position;
@@ -42,7 +44,6 @@ class TankDriveCalculator {
 		std::shared_ptr<SQDerivable> function; // TODO: Make this useful with any SQ_Derivable
 		float wheel_distance;
 		float time_step;
-		bool reverse;
 };
 
 #endif

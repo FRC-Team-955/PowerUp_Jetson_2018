@@ -1,10 +1,18 @@
 #include <spline_wrap.h>
 
-SplineWrap::SplineWrap(WayPoint a, WayPoint b, bool reverse) {
+SplineWrap::SplineWrap(WayPoint a, WayPoint b) {
+	bool reverse = 
+		a.velocity_end < 0 ||
+		a.velocity_beginning < 0 ||
+		b.velocity_end < 0 ||
+		b.velocity_beginning < 0;
+
 	stop_index = 1.0;
 	start_index = 0.0;
-	if (reverse)
+	if (reverse) {
+		std::swap(a, b);
 		std::swap(start_index, stop_index);
+	}
 
 	std::vector<cv::Point3f> control_points;
 	a.to_control_points(control_points, false);
