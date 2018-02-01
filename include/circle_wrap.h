@@ -8,7 +8,7 @@
 class CircleWrap : public SQDerivable {
 	public:
 		CircleWrap(cv::Point2f center, float y_distance, float x_distance);
-		void evaluate(float index);
+		bool evaluate(float index);
 	private:
 		float y_distance;
 		float x_distance;

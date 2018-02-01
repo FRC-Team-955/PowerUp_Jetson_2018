@@ -1,8 +1,11 @@
 #include <spline_wrap.h>
 
-SplineWrap::SplineWrap(WayPoint a, WayPoint b) {
-	max_index = 1.0;
-	min_index = 0.0;
+SplineWrap::SplineWrap(WayPoint a, WayPoint b, bool reverse) {
+	stop_index = 1.0;
+	start_index = 0.0;
+	if (reverse)
+		std::swap(start_index, stop_index);
+
 	std::vector<cv::Point3f> control_points;
 	a.to_control_points(control_points, false);
 	b.to_control_points(control_points, true);
@@ -30,13 +33,18 @@ void SplineWrap::set_ctrlpts(std::vector<cv::Point3f> control_points) {
 	evaluate(0.0);
 }
 
-void SplineWrap::evaluate(float index) {
-	position = eval_spline_Point3f(&spline, index);
-	velocity = eval_spline_Point3f(&spline_derive, index);
-	acceleration = eval_spline_Point3f(&spline_derive_sq, index);
+bool SplineWrap::evaluate(float index) {
+	if (within_bounds(index)) {
+		position = eval_spline_Point3f(&spline, index);
+		velocity = eval_spline_Point3f(&spline_derive, index);
+		acceleration = eval_spline_Point3f(&spline_derive_sq, index);
+		return true;
+	} else {
+		return false;
+	}
 }
 
-cv::Point3f SplineWrap::eval_spline_Point3f(tinyspline::BSpline* sp, float change_in_index) {
+inline cv::Point3f SplineWrap::eval_spline_Point3f(tinyspline::BSpline* sp, float change_in_index) {
 	auto eval = sp->evaluate(change_in_index).result();
 	return cv::Point3f(eval[0], eval[1], eval[2]);
 }

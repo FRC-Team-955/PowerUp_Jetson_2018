@@ -32,18 +32,17 @@ class TankDriveCalculator {
 			float robot_direction;
 		};
 
-		TankOutput evaluate(bool advance);
+		bool evaluate(TankOutput& output, bool advance);
 		void render();
 		void render_robot();
 
 	private:
 		float index = 0.0;
-		TankOutput evaluate(float *index, bool advance);
+		bool evaluate(TankOutput& output, float& index, bool advance);
 		std::shared_ptr<SQDerivable> function; // TODO: Make this useful with any SQ_Derivable
 		float wheel_distance;
 		float time_step;
 		bool reverse;
-		bool advance;
 };
 
 #endif

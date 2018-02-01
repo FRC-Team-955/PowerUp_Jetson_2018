@@ -1,13 +1,12 @@
 #include <tank_drive_calculator.h>
 
-TankDriveCalculator::TankOutput TankDriveCalculator::evaluate(bool advance) {
-	return evaluate(&index, advance);
+ bool TankDriveCalculator::evaluate(TankDriveCalculator::TankOutput& output, bool advance) {
+	return evaluate(output, index, advance);
 }
 
-TankDriveCalculator::TankOutput TankDriveCalculator::evaluate (float *index, bool advance) {
-		TankOutput output;
-
-		function->evaluate(*index); //We hijack the third axis (Z) to use it as a velocity max set point. heh.
+bool TankDriveCalculator::evaluate (TankDriveCalculator::TankOutput& output, float& index, bool advance) {
+	if (function->evaluate(index)) {
+		//We hijack the third axis (Z) to use it as a velocity max set point. heh.
 		float max_allowed_velocity = function->position.z;
 
 		//Position = center + (perpendicular vector * d)
@@ -41,19 +40,7 @@ TankDriveCalculator::TankOutput TankDriveCalculator::evaluate (float *index, boo
 		output.motion.position_left = 0.0;
 		output.motion.position_right = 0.0;
 
-		if (*index > function->max_index) {
-			output.motion.special = TankDriveMotionUnit::Special::Beginning;
-		} else {
-			output.motion.special = TankDriveMotionUnit::Special::Middle;
-		}
-
-		if (advance) {
-			if (*index + dj >= function->max_index || *index + dj <= function->min_index) {
-				output.motion.special = TankDriveMotionUnit::Special::End;
-			} else {
-				*index += fabs(dj);
-			}
-		}
+		index += fabs(dj);
 
 		//Hard turns (Where one motor's velocity more than doubles the other's velocity) need to reverse one motor
 		if (((dp_dj_left - function->velocity_magnitude_xy()) / wheel_distance > 1.0) &&
@@ -64,12 +51,18 @@ TankDriveCalculator::TankOutput TankDriveCalculator::evaluate (float *index, boo
 				function-> change_in_angle() < 0.0)
 			output.motion.velocity_right *= -1.0;
 
-		return output;
+		return true;
+	} else {
+		return false;
+	}
 }
 
 void TankDriveCalculator::render() {
 	float render_index = 0.0;
-	TankDriveCalculator::TankOutput	output = evaluate(&render_index, true);
+	TankDriveCalculator::TankOutput output;
+
+	evaluate(output, render_index, true);
+
 	glColor3f(0.0, 0.0, 0.0);
 	glLineWidth(3);
 	glBegin(GL_LINES);
@@ -77,8 +70,7 @@ void TankDriveCalculator::render() {
 	cv::Point2f last_left = output.left_position;
 	cv::Point2f last_right = output.right_position;
 
-	do {
-		output = evaluate(&render_index, true);
+	while(evaluate(output, render_index, true)) {
 		Renderer::color_by(output.motion.velocity_left);
 		glVertex2f(last_left.x, last_left.y);
 		glVertex2f(output.left_position.x, output.left_position.y);
@@ -89,12 +81,13 @@ void TankDriveCalculator::render() {
 
 		last_left = output.left_position;
 		last_right = output.right_position;
-	} while (output.motion.special != TankDriveMotionUnit::Special::End);
+	}
 	glEnd();
 }
 
 void TankDriveCalculator::render_robot() {
-	evaluate(false);
+	TankDriveCalculator::TankOutput output;
+	evaluate(output, false);
 	glColor3f(0.8, 0.8, 0.8);
 	glLineWidth(3);
 	std::vector<cv::Point2f> wireframe;

@@ -15,7 +15,7 @@ class SQDerivable {
 
 		//returns false if at end
 		//Advance index by amount, returns true if successful, and sets position, velocity, etc.
-		virtual void evaluate(float index) = 0;
+		virtual bool evaluate(float index) = 0;
 
 		//The total velocity over dj
 		float velocity_magnitude_xy() {
@@ -59,8 +59,16 @@ class SQDerivable {
 			return (1.0 / (1.0 + powf(velocity.y / velocity.x, 2.0))) * change_in_slope();
 		}
 
-		float max_index = 1.0;
-		float min_index = 0.0;
+		bool within_bounds (float index) {
+			if (stop_index > start_index) {
+				return index <= stop_index && index >= start_index;
+			} else {
+				return index >= stop_index && index <= start_index;
+			}
+		}
+
+		float start_index = 0.0;
+		float stop_index = 0.0;
 };
 
 #endif

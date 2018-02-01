@@ -11,17 +11,17 @@
 class SplineWrap : public SQDerivable {
 	public:
 		SplineWrap(std::vector<WayPoint> points);
-		SplineWrap(WayPoint a, WayPoint b);
+		SplineWrap(WayPoint a, WayPoint b, bool reverse = false);
 		void set_ctrlpts(std::vector<cv::Point3f> points);
 
 		void render();
-		void evaluate(float index);
+		bool evaluate(float index);
 	private:
 		const size_t spline_dimension = 3;
 		tinyspline::BSpline spline;
 		tinyspline::BSpline spline_derive;
 		tinyspline::BSpline spline_derive_sq;
-		cv::Point3f eval_spline_Point3f(tinyspline::BSpline* sp, float index);
+		inline cv::Point3f eval_spline_Point3f(tinyspline::BSpline* sp, float index);
 };
 
 #endif

@@ -8,7 +8,7 @@
 class SpiralWrap : public SQDerivable {
 	public:
 		SpiralWrap(cv::Point2f center, float distance, float max_index);
-		void evaluate(float index);
+		bool evaluate(float index);
 	private:
 		float distance;
 		cv::Point2f center;

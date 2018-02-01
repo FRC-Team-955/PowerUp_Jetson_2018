@@ -6,17 +6,11 @@ void MultiWaypointCalculator::reset_and_begin(WayPoint input) {
 }
 
 bool MultiWaypointCalculator::evaluate(TankDriveCalculator::TankOutput &output) {
-	if (path.size() > 0) {
-		output = path.back().path.evaluate(true);
-		if (output.motion.special == TankDriveMotionUnit::Special::End && path.size()) {
-			if (path.size() > 0) {
-				path.pop_back();
-			}
+		//Get to the next valid path, skipping immediately void ones.
+		while (path.size() && !path.back().path.evaluate(output, true)) {
+			path.pop_back();
 		}
-		return true;
-	} else {
-		return false;
-	}
+		return path.size() > 0;
 }
 
 bool MultiWaypointCalculator::replace_current(WayPoint input) {
