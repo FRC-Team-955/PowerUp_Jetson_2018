@@ -5,6 +5,7 @@
 #include <sq_derivable.h>
 #include <opencv2/opencv.hpp>
 #include <vector>
+#include <cmath>
 #include <renderer.h>
 #include <waypoint.h>
 

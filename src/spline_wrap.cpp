@@ -10,6 +10,10 @@ SplineWrap::SplineWrap(WayPoint a, WayPoint b) {
 	stop_index = 1.0;
 	start_index = 0.0;
 	if (reverse) {
+		a.velocity_end = std::copysign(a.velocity_end, -1.0);
+		a.velocity_beginning = std::copysign(a.velocity_beginning, -1.0);
+		b.velocity_end = std::copysign(b.velocity_end, -1.0);
+		b.velocity_beginning = std::copysign(b.velocity_beginning, -1.0);
 		std::swap(a, b);
 		std::swap(start_index, stop_index);
 	}
