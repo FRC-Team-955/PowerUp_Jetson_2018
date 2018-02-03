@@ -12,6 +12,12 @@ namespace MM = MiscMath;
 
 float random_float() { return ((double)rand() / (RAND_MAX)); }
 
+// TODO:
+//    Make creating waypoints cleaner/easier
+//    Documentation
+//    Proper error reporting and logging; Return enum with error code instead of bool? 
+//    	0 for success, any for fail for partial backwards compat.
+
 int main() {
 #if JUST_RENDER
 	Renderer::init();
@@ -24,7 +30,6 @@ int main() {
 
 	MultiWaypointCalculator path(wheel_width / 2.0, 20.0);
 
-	//while (true) {
 	path.reset_and_begin(
 			{FD::Switch::front_center_left - cv::Point2f(0.0, wheel_width / 2.0f),
 			0.25, 1.0, MM::pi / 2.0f, wheel_width});
@@ -32,8 +37,7 @@ int main() {
 		path.push_back(
 				{cv::Point2f(1000.0 + random_float() * (FD::field_width - 1000.0),
 						1000.0 + random_float() * (FD::field_height - 2000.0)),
-				1.0, 1.0, random_float() * MM::pi * 2.0f, wheel_width},
-				false);
+				1.0, 1.0, random_float() * MM::pi * 2.0f, wheel_width});
 
 	size_t randspot = random_float() * 200.0;
 	size_t idx = 0;
@@ -66,5 +70,4 @@ int main() {
 				sizeof(bool)); // Read once before we update the spline
 #endif
 	}
-	//}
 }

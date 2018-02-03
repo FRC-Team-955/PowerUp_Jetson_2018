@@ -20,8 +20,7 @@ class TankDriveCalculator {
 		TankDriveCalculator(
 				std::shared_ptr<SQDerivable> function,
 				float wheel_distance,
-				float time_step,
-				bool reverse)
+				float time_step)
 			: function(function), wheel_distance(wheel_distance),
 			time_step(time_step) {
 				index = function->start_index;

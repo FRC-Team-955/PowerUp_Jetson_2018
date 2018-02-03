@@ -1,6 +1,6 @@
 #include <tank_drive_calculator.h>
 
- bool TankDriveCalculator::evaluate(TankDriveCalculator::TankOutput& output, bool advance) {
+bool TankDriveCalculator::evaluate(TankDriveCalculator::TankOutput& output, bool advance) {
 	return evaluate(output, index, advance);
 }
 
@@ -29,12 +29,12 @@ bool TankDriveCalculator::evaluate (TankDriveCalculator::TankOutput& output, flo
 
 		output.motion.delta_time = time_step;
 
+		//TODO: Make the actual function exposed instead of this garbage?
 		output.robot_direction = function->direction_xy();
 
+		//TODO: Actually assign these
 		output.motion.position_left = 0.0;
 		output.motion.position_right = 0.0;
-
-		index += dj;
 
 		//Hard turns (Where one motor's velocity more than doubles the other's velocity) need to reverse one motor
 		if (((dp_dj_left - function->velocity_magnitude_xy()) / wheel_distance > 1.0) &&
@@ -44,6 +44,9 @@ bool TankDriveCalculator::evaluate (TankDriveCalculator::TankOutput& output, flo
 		if (((dp_dj_right - function->velocity_magnitude_xy()) / wheel_distance > 1.0) &&
 				function-> change_in_angle() < 0.0)
 			output.motion.velocity_right *= -1.0;
+
+		//Increase the index by the amount we need to move one time unit
+		index += dj;
 
 		return true;
 	} else {
@@ -80,28 +83,5 @@ void TankDriveCalculator::render() {
 }
 
 void TankDriveCalculator::render_robot() {
-	TankDriveCalculator::TankOutput output;
-	evaluate(output, false);
-	glColor3f(0.8, 0.8, 0.8);
-	glLineWidth(3);
-	std::vector<cv::Point2f> wireframe;
-	wireframe.push_back(cv::Point2f ((wheel_distance), (wheel_distance)));
-	wireframe.push_back(cv::Point2f (-(wheel_distance), (wheel_distance)));
-	wireframe.push_back(cv::Point2f (-(wheel_distance), -(wheel_distance)));
-	wireframe.push_back(cv::Point2f ((wheel_distance), -(wheel_distance)));
-
-	cv::Mat rot_mat( 2, 3, CV_32FC1 );
-	rot_mat = cv::getRotationMatrix2D(cv::Point2f(0.0, 0.0), -function->direction_xy() * (180.0 / acos(-1)), 1.0);
-	cv::transform(wireframe, wireframe, rot_mat);
-
-	cv::Point2f last = wireframe.back();
-	glBegin(GL_LINES);
-	for (auto& point : wireframe) {
-		glVertex2f(point.x + function->position.x, point.y + function->position.y);
-		glVertex2f(last.x + function->position.x, last.y + function->position.y);
-		last = point;
-	}
-	glVertex2f(function->position.x, function->position.y);
-	glVertex2f(function->position.x + (cos(function->direction_xy()) * (wheel_distance)), function->position.y + (sin(function->direction_xy()) * (wheel_distance)));
-	glEnd();
+	function->render_robot(wheel_distance, index);
 }
