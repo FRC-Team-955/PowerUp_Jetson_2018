@@ -31,6 +31,8 @@ int main() {
 
 	MultiWaypointCalculator path(wheel_width / 2.0, 20.0);
 
+	// Position, Start Velocity End Velocity, Direction (rel. to origin), outcrop
+	
 	//Start
 	path.reset_and_begin(
 			{cv::Point2f(1000.0, 1000.0),
@@ -39,20 +41,22 @@ int main() {
 	//Switch front
 	path.push_back(
 			{FD::Switch::front_center_left - cv::Point2f(0.0, wheel_width / 2.0f),
-			0.25, 1.0, MM::pi / 2.0f, wheel_width}, true);
+			0.25, 1.0, MM::pi / 2.0f, wheel_width}, false);
 
 	//Back up
 	path.push_back(
-			{cv::Point2f(1000.0, 5000.0),
-			1.0, 1.0, MM::pi / 2.0f, 100.0}, false);
+			{cv::Point2f(1000.0, 2000.0),
+			0.25, 1.0, MM::pi / 2.0f, wheel_width}, true);
 
+	//Trek forward
 	path.push_back(
-			{cv::Point2f(1000.0, 8000.0),
-			0.25, 1.0, MM::pi / 2.0f, wheel_width}, false);
+			{cv::Point2f(1000.0, 7000.0),
+			1.0, 1.0, MM::pi / 2.0f, wheel_width}, false);
 
+	//Meet the other side of the switch
 	path.push_back(
 			{FD::Switch::back_center_left + cv::Point2f(0.0, wheel_width / 2.0f),
-			1.0, 1.0, MM::pi / 2.0f, wheel_width}, true);
+			0.25, 1.0, (3.0f * MM::pi) / 2.0f, wheel_width}, false);
 
 	TankDriveCalculator::TankOutput output;
 	while (path.evaluate(output)) {
@@ -61,6 +65,7 @@ int main() {
 		Renderer::bound(FD::field_bounds, 4.0);
 		Renderer::grid(1000.0, 1000.0, 0.2, 0.2, 0.2, FD::field_bounds);
 		FieldRenderer::render((char *)"RL", false);
+		std::cout << output.motion.velocity_left << " : " << output.motion.velocity_right << std::endl;
 
 		path.render();
 		Renderer::display();
