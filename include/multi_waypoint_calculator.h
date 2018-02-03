@@ -5,7 +5,6 @@
 #include <spline_wrap.h>
 #include <tank_drive_calculator.h>
 #include <waypoint.h>
-#include <optional>
 
 class MultiWaypointCalculator {
 	public:

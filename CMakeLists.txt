@@ -30,9 +30,9 @@ INCLUDE_DIRECTORIES("/usr/local/include/tinysplinecpp.h")
 FILE(GLOB SOURCES "src/*.cpp")
 INCLUDE_DIRECTORIES("./include")
 
-# Use c++17 and clang
+# Use c++11 and clang
 SET (CMAKE_CXX_COMPILER "/usr/bin/clang++")
-SET (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17 ")
+SET (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 ")
 
 # Make all of the sources executable
 ADD_EXECUTABLE(PowerUp2018 ${SOURCES})
