@@ -21,17 +21,18 @@ bool MultiWaypointCalculator::evaluate(TankDriveCalculator::TankOutput &output) 
 bool MultiWaypointCalculator::replace_current(WayPoint input) {
 	if (path.size() > 0) {
 		WayPoint end = path.back().end;
+		bool reverse = path.back().reverse;
 
 		// Create the new path
 		TankDriveCalculator calc (
-			std::make_shared<SplineWrap> (input, end),
+			std::make_shared<SplineWrap> (input, end, reverse),
 			wheel_distance,
 			max_change_time);
 
 		path.pop_back(); // Remove the old path
 
 		// Add the new path
-		path.push_back( { calc, end } );
+		path.push_back( { calc, end, reverse } );
 		return true;
 	} else {
 		// There's no other end point, just replace the beginning
@@ -47,7 +48,7 @@ bool MultiWaypointCalculator::replace_current(WayPoint input) {
 
 // Push a new objective to the full path, caching it's end point so we can
 // swap it later
-bool MultiWaypointCalculator::push_back(WayPoint input) {
+bool MultiWaypointCalculator::push_back(WayPoint input, bool reverse) {
 	// Either use the last spline's end, or the seed start
 	WayPoint start; 
 	if (path.size() == 0) {
@@ -62,12 +63,12 @@ bool MultiWaypointCalculator::push_back(WayPoint input) {
 
 	// Create the tank drive calculation object
 	TankDriveCalculator calc (
-			std::make_shared<SplineWrap> (start, input),
+			std::make_shared<SplineWrap> (start, input, reverse),
 			wheel_distance,
 			max_change_time);
 
 	// Push it as the next objective
-	path.push_front( { calc, input } );
+	path.push_front( { calc, input, reverse } );
 	return true;
 }
 

@@ -1,19 +1,16 @@
 #include <spline_wrap.h>
 
-SplineWrap::SplineWrap(WayPoint a, WayPoint b) {
-	bool reverse = 
-		a.velocity_end < 0 ||
-		a.velocity_beginning < 0 ||
-		b.velocity_end < 0 ||
-		b.velocity_beginning < 0;
+SplineWrap::SplineWrap(WayPoint a, WayPoint b, bool reverse) {
 
 	stop_index = 1.0;
 	start_index = 0.0;
+
+	float setsign = reverse ? -1.0 : 1.0;
 	if (reverse) {
-		a.velocity_end = std::copysign(a.velocity_end, -1.0);
-		a.velocity_beginning = std::copysign(a.velocity_beginning, -1.0);
-		b.velocity_end = std::copysign(b.velocity_end, -1.0);
-		b.velocity_beginning = std::copysign(b.velocity_beginning, -1.0);
+		a.velocity_end = std::copysign(a.velocity_end, setsign);
+		a.velocity_beginning = std::copysign(a.velocity_beginning, setsign);
+		b.velocity_end = std::copysign(b.velocity_end, setsign);
+		b.velocity_beginning = std::copysign(b.velocity_beginning, setsign);
 		std::swap(a, b);
 		std::swap(start_index, stop_index);
 	}

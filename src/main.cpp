@@ -17,6 +17,7 @@ float random_float() { return ((double)rand() / (RAND_MAX)); }
 //    Documentation
 //    Proper error reporting and logging; Return enum with error code instead of bool? 
 //    	0 for success, any for fail for partial backwards compat.
+//    Action items, attached to waypoints (Executes at end of path)
 
 int main() {
 #if JUST_RENDER
@@ -30,20 +31,30 @@ int main() {
 
 	MultiWaypointCalculator path(wheel_width / 2.0, 20.0);
 
+	//Start
 	path.reset_and_begin(
-			{FD::Switch::front_center_left - cv::Point2f(0.0, wheel_width / 2.0f),
+			{cv::Point2f(1000.0, 1000.0),
 			0.25, 1.0, MM::pi / 2.0f, wheel_width});
-	for (int i = 0; i < 3; i++)
-		path.push_back(
-				{cv::Point2f(1000.0 + random_float() * (FD::field_width - 1000.0),
-						1000.0 + random_float() * (FD::field_height - 2000.0)),
-				1.0, 1.0, random_float() * MM::pi * 2.0f, wheel_width});
+	
+	//Switch front
+	path.push_back(
+			{FD::Switch::front_center_left - cv::Point2f(0.0, wheel_width / 2.0f),
+			0.25, 1.0, MM::pi / 2.0f, wheel_width}, true);
 
-	size_t randspot = random_float() * 200.0;
-	size_t idx = 0;
+	//Back up
+	path.push_back(
+			{cv::Point2f(1000.0, 5000.0),
+			1.0, 1.0, MM::pi / 2.0f, 100.0}, false);
+
+	path.push_back(
+			{cv::Point2f(1000.0, 8000.0),
+			0.25, 1.0, MM::pi / 2.0f, wheel_width}, false);
+
+	path.push_back(
+			{FD::Switch::back_center_left + cv::Point2f(0.0, wheel_width / 2.0f),
+			1.0, 1.0, MM::pi / 2.0f, wheel_width}, true);
 
 	TankDriveCalculator::TankOutput output;
-
 	while (path.evaluate(output)) {
 #if JUST_RENDER
 		Renderer::clear();
@@ -51,18 +62,8 @@ int main() {
 		Renderer::grid(1000.0, 1000.0, 0.2, 0.2, 0.2, FD::field_bounds);
 		FieldRenderer::render((char *)"RL", false);
 
-		if (idx == randspot) {
-			path.replace_current(
-					{output.center_position +
-					cv::Point2f(random_float(), random_float()) * 10.0,
-					1.0, 1.0, output.robot_direction + (random_float() * 0.001f),
-					wheel_width});
-			randspot = (random_float() * 500.0) + idx;
-		}
-
 		path.render();
 		Renderer::display();
-		idx++;
 #else
 		bool abort;
 		sock.write_to(&output.motion, sizeof(TankDriveCalculator::TankOutput));

@@ -12,7 +12,7 @@
 class SplineWrap : public SQDerivable {
 	public:
 		SplineWrap(std::vector<WayPoint> points);
-		SplineWrap(WayPoint a, WayPoint b);
+		SplineWrap(WayPoint a, WayPoint b, bool reverse);
 		void set_ctrlpts(std::vector<cv::Point3f> points);
 
 		void render();

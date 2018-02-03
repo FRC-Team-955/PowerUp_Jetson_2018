@@ -14,7 +14,7 @@ class MultiWaypointCalculator {
 		void render();
 		void reset_and_begin(WayPoint input);
 		bool replace_current(WayPoint input);
-		bool push_back(WayPoint input);
+		bool push_back(WayPoint input, bool reverse);
 		bool evaluate(TankDriveCalculator::TankOutput &output);
 
 	private:
@@ -26,6 +26,7 @@ class MultiWaypointCalculator {
 		struct PathEndPair {
 			TankDriveCalculator path;
 			WayPoint end;
+			bool reverse;
 		};
 
 		// The seed beginning of the path, because a path cannot be constructed from
