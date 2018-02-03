@@ -5,7 +5,7 @@
 #include <renderer.h>
 #include <socket.h>
 
-#define JUST_RENDER true
+#define JUST_RENDER false
 
 namespace FD = FieldDimension;
 namespace MM = MiscMath;
@@ -65,15 +65,19 @@ int main() {
 		Renderer::bound(FD::field_bounds, 4.0);
 		Renderer::grid(1000.0, 1000.0, 0.2, 0.2, 0.2, FD::field_bounds);
 		FieldRenderer::render((char *)"RL", false);
-		std::cout << output.motion.velocity_left << " : " << output.motion.velocity_right << std::endl;
 
 		path.render();
 		Renderer::display();
 #else
 		bool abort;
 		sock.write_to(&output.motion, sizeof(TankDriveCalculator::TankOutput));
-		sock.read_to(&abort,
-				sizeof(bool)); // Read once before we update the spline
+		sock.read_to(&abort, sizeof(bool)); // Read once before we update the spline
 #endif
+	}
+	output.motion.delta_time = 0.0;
+	while (true) {
+		bool abort;
+		sock.write_to(&output.motion, sizeof(TankDriveCalculator::TankOutput));
+		sock.read_to(&abort, sizeof(bool)); // Read once before we update the spline
 	}
 }
