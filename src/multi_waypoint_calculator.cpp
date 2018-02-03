@@ -18,7 +18,7 @@ bool MultiWaypointCalculator::evaluate(TankDriveCalculator::TankOutput &output) 
 
 // Swap our current path's starting point with the given waypoint, keeping the end point 
 //    Mainly used when we need to correct a drift
-bool MultiWaypointCalculator::replace_current(WayPoint input) {
+void MultiWaypointCalculator::replace_current(WayPoint input) {
 	if (path.size() > 0) {
 		WayPoint end = path.back().end;
 		bool reverse = path.back().reverse;
@@ -33,30 +33,20 @@ bool MultiWaypointCalculator::replace_current(WayPoint input) {
 
 		// Add the new path
 		path.push_back( { calc, end, reverse } );
-		return true;
 	} else {
 		// There's no other end point, just replace the beginning
-		if (beginning) {
-			beginning = input;
-			return true;
-		} else {
-			// There's nothing to replace. 
-			return false;
-		}
+		beginning_exists = true;
+		beginning = input;
 	}
 }
 
 // Push a new objective to the full path, caching it's end point so we can
 // swap it later
-bool MultiWaypointCalculator::push_back(WayPoint input, bool reverse) {
+void MultiWaypointCalculator::push_back(WayPoint input, bool reverse) {
 	// Either use the last spline's end, or the seed start
 	WayPoint start; 
 	if (path.size() == 0) {
-		if (beginning) {
-			start = beginning.value();
-		} else {
-			return false;
-		}
+		start = beginning;
 	} else {
 		start = path.front().end;
 	}
@@ -69,7 +59,6 @@ bool MultiWaypointCalculator::push_back(WayPoint input, bool reverse) {
 
 	// Push it as the next objective
 	path.push_front( { calc, input, reverse } );
-	return true;
 }
 
 void MultiWaypointCalculator::render() {

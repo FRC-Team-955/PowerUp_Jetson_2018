@@ -68,11 +68,11 @@ int main() {
 
 		path.render();
 		Renderer::display();
+	}
 #else
 		bool abort;
 		sock.write_to(&output.motion, sizeof(TankDriveCalculator::TankOutput));
 		sock.read_to(&abort, sizeof(bool)); // Read once before we update the spline
-#endif
 	}
 	output.motion.delta_time = 0.0;
 	while (true) {
@@ -80,4 +80,5 @@ int main() {
 		sock.write_to(&output.motion, sizeof(TankDriveCalculator::TankOutput));
 		sock.read_to(&abort, sizeof(bool)); // Read once before we update the spline
 	}
+#endif
 }

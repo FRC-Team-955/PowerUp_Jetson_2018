@@ -13,8 +13,8 @@ class MultiWaypointCalculator {
 			: wheel_distance(wheel_distance), max_change_time(max_change_time){};
 		void render();
 		void reset_and_begin(WayPoint input);
-		bool replace_current(WayPoint input);
-		bool push_back(WayPoint input, bool reverse);
+		void replace_current(WayPoint input);
+		void push_back(WayPoint input, bool reverse);
 		bool evaluate(TankDriveCalculator::TankOutput &output);
 
 	private:
@@ -32,7 +32,8 @@ class MultiWaypointCalculator {
 		// The seed beginning of the path, because a path cannot be constructed from
 		// a single point
 		// Also: Habits die hard, Rust has spoiled me...
-		std::optional<WayPoint> beginning;
+		bool beginning_exists = false;
+		WayPoint beginning;
 
 		// Back is the current path, front is the paths in the future
 		std::deque<PathEndPair> path;
