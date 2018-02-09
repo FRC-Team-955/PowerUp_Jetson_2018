@@ -1,5 +1,4 @@
 #include <multi_waypoint_calculator.h>
-
 // Reset the entire path, seeding the beginning
 void MultiWaypointCalculator::reset_and_begin(WayPoint input) {
 	path.clear();
@@ -63,8 +62,10 @@ void MultiWaypointCalculator::push_back(WayPoint input, bool reverse) {
 
 void MultiWaypointCalculator::render() {
 	if (path.size() > 0) {
-		for (auto& path_render : path)
+		for (auto& path_render : path) {
 			path_render.path.render();
+			path_render.end.render(path_render.reverse);
+		}
 		//Render the bot at the most recent spot
 		path.back().path.render_robot();
 	}

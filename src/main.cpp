@@ -5,7 +5,7 @@
 #include <renderer.h>
 #include <socket.h>
 
-#define JUST_RENDER false
+#define JUST_RENDER true
 
 namespace FD = FieldDimension;
 namespace MM = MiscMath;
@@ -29,7 +29,7 @@ int main() {
 	srand(time(NULL));
 	const float wheel_width = 660.0;
 
-	MultiWaypointCalculator path(wheel_width / 2.0, 10.0);
+	MultiWaypointCalculator path(wheel_width / 2.0, 5.0);
 
 	// Position, Start Velocity End Velocity, Direction (rel. to origin), outcrop
 	

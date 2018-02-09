@@ -30,7 +30,6 @@ class MultiWaypointCalculator {
 
 		// The seed beginning of the path, because a path cannot be constructed from
 		// a single point
-		// Also: Habits die hard, Rust has spoiled me...
 		bool beginning_exists = false;
 		WayPoint beginning;
 

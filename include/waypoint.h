@@ -4,6 +4,10 @@
 #include <opencv2/opencv.hpp>
 #include <misc_math.h>
 
+#include <GL/freeglut.h>
+#include <GL/gl.h>
+#include <GL/glu.h>
+
 namespace MM = MiscMath;
 
 struct WayPoint {
@@ -13,6 +17,7 @@ struct WayPoint {
 			direction,
 			length;
 	void to_control_points (std::vector<cv::Point3f> &output, bool invert);
+	void render(bool invert);
 };
 
 #endif
