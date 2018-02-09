@@ -13,8 +13,13 @@ void WayPoint::to_control_points (std::vector<cv::Point3f> &output, bool invert)
 	}
 }
 
+WayPoint WayPoint::before() {
+	WayPoint copy = *this;
+	copy.position = MiscMath::RadialOffset(this->direction, -this->length / 2.0, this->position);
+	return copy;
+}
+
 void WayPoint::render(bool invert) {
-	//float direction_calib = invert ? this->direction : this->direction + MM::pi;
 	glColor3f(1.0, 0.7, 0.0);
 	glLineWidth(3);
 	std::vector<cv::Point2f> wireframe;
@@ -28,7 +33,7 @@ void WayPoint::render(bool invert) {
 	wireframe.push_back(cv::Point2f (this->length * -0.1, this->length * 0.4));
 
 	cv::Mat rot_mat( 2, 3, CV_32FC1 );
-	rot_mat = cv::getRotationMatrix2D(cv::Point2f(0.0, 0.0), (this->direction * (180.0 / acos(-1))) - 90.0, 1.0);
+	rot_mat = cv::getRotationMatrix2D(cv::Point2f(0.0, 0.0), (-this->direction * (180.0 / acos(-1))) + 90.0, 1.0);
 	cv::transform(wireframe, wireframe, rot_mat);
 
 	cv::Point2f last = wireframe.back();

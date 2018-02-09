@@ -40,8 +40,8 @@ int main() {
 	
 	//Switch front
 	path.push_back(
-			{FD::Switch::front_center_left - cv::Point2f(0.0, wheel_width / 2.0f),
-			0.25, 5.0, MM::pi / 2.0f, wheel_width}, false);
+			((WayPoint){FD::Switch::front_center_left,
+			0.25, 5.0, MM::pi / 2.0f, wheel_width}).before(), false);
 
 	//Back up
 	path.push_back(
@@ -55,8 +55,8 @@ int main() {
 
 	//Meet the other side of the switch
 	path.push_back(
-			{FD::Switch::back_center_left + cv::Point2f(0.0, wheel_width / 2.0f),
-			0.25, 5.0, (3.0f * MM::pi) / 2.0f, wheel_width}, false);
+			((WayPoint){FD::Switch::back_center_left,
+			0.25, 5.0, (3.0f * MM::pi) / 2.0f, wheel_width}).before(), false);
 
 	TankDriveCalculator::TankOutput output;
 	std::cout << "Begin main loop" << std::endl;
