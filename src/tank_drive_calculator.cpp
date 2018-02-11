@@ -24,19 +24,23 @@ bool TankDriveCalculator::evaluate (TankDriveCalculator::TankOutput& output, flo
 		float dj = (max_dp / largest_dp_dj);
 
 		//Save distances over dt as velocity
-		output.motion.velocity_left = (dj * dp_dj_left) / time_step;
-		output.motion.velocity_right = (dj * dp_dj_right) / time_step;
+		float dp_left = (dj * dp_dj_left);
+		float dp_right = (dj * dp_dj_right);
+
+		//Assign velocities
+		output.motion.velocity_left = dp_left / time_step;
+		output.motion.velocity_right = dp_right / time_step;
+
+		//Increment positions
+		output.motion.position_left += dp_left;
+		output.motion.position_right += dp_right;
 
 		output.motion.delta_time = time_step;
 
 		//TODO: Make the actual function exposed instead of this garbage?
 		output.robot_direction = function->direction_xy();
 
-		//TODO: Actually assign these
-		output.motion.position_left = 0.0;
-		output.motion.position_right = 0.0;
-
-		//Hard turns (Where one motor's velocity more than doubles the other's velocity) need to reverse one motor
+		//Hard turns (Where one motor's velocity more than doubles the other's velocity over the wheel distance), reverse one motor
 		if (((dp_dj_left - function->velocity_magnitude_xy()) / wheel_distance > 1.0) &&
 				function-> change_in_angle() > 0.0)
 			output.motion.velocity_left *= -1.0;

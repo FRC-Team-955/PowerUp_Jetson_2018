@@ -1,5 +1,6 @@
 #include <waypoint.h>
 
+//Create control points for a spline
 void WayPoint::to_control_points (std::vector<cv::Point3f> &output, bool invert) {
 	output.push_back(MM::From2f_xy(this->position, this->velocity_beginning));
 	output.push_back(MM::From2f_xy(
@@ -13,9 +14,10 @@ void WayPoint::to_control_points (std::vector<cv::Point3f> &output, bool invert)
 	}
 }
 
-WayPoint WayPoint::before() {
+//Return a waypoint behind this one, but moved along it's direction by _wheel width_ units
+WayPoint WayPoint::before(float distance) {
 	WayPoint copy = *this;
-	copy.position = MiscMath::RadialOffset(this->direction, -this->length / 2.0, this->position);
+	copy.position = MiscMath::RadialOffset(this->direction, -distance / 2.0, this->position);
 	return copy;
 }
 

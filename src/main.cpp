@@ -10,8 +10,6 @@
 namespace FD = FieldDimension;
 namespace MM = MiscMath;
 
-float random_float() { return ((double)rand() / (RAND_MAX)); }
-
 // TODO:
 //    Make creating waypoints cleaner/easier
 //    Documentation
@@ -29,34 +27,36 @@ int main() {
 	srand(time(NULL));
 	const float wheel_width = 660.0;
 
-	MultiWaypointCalculator path(wheel_width / 2.0, 5.0);
+	MultiWaypointCalculator path(wheel_width / 2.0, 10);
 
 	// Position, Start Velocity End Velocity, Direction (rel. to origin), outcrop
+	float min_speed = 0.5;
+	float max_speed = 1.0;
 	
 	//Start
 	path.reset_and_begin(
 			{cv::Point2f(1000.0, 1000.0),
-			0.25, 5.0, MM::pi / 2.0f, wheel_width});
+			min_speed, max_speed, MM::pi / 2.0f, wheel_width});
 	
 	//Switch front
 	path.push_back(
-			((WayPoint){FD::Switch::front_center_left,
-			0.25, 5.0, MM::pi / 2.0f, wheel_width}).before(), false);
+			((WayPoint){FD::Switch::front,
+			min_speed, max_speed, MM::pi / 2.0f, wheel_width}).before(wheel_width), false);
 
 	//Back up
 	path.push_back(
 			{cv::Point2f(1000.0, 2000.0),
-			0.25, 5.0, MM::pi / 2.0f, wheel_width}, true);
+			min_speed, max_speed, MM::pi / 2.0f, wheel_width}, true);
 
 	//Trek forward
 	path.push_back(
-			{cv::Point2f(1000.0, 7000.0),
-			5.0, 5.0, MM::pi / 2.0f, wheel_width}, false);
+			{cv::Point2f(1000.0, 4000.0),
+			max_speed, max_speed, MM::pi / 2.0f, wheel_width}, false);
 
 	//Meet the other side of the switch
 	path.push_back(
-			((WayPoint){FD::Switch::back_center_left,
-			0.25, 5.0, (3.0f * MM::pi) / 2.0f, wheel_width}).before(), false);
+			((WayPoint){FD::Switch::back,
+			min_speed, max_speed, (3.0f * MM::pi) / 2.0f, wheel_width}).before(wheel_width), false);
 
 	TankDriveCalculator::TankOutput output;
 	std::cout << "Begin main loop" << std::endl;
@@ -66,6 +66,8 @@ int main() {
 		Renderer::bound(FD::field_bounds, 4.0);
 		Renderer::grid(1000.0, 1000.0, 0.2, 0.2, 0.2, FD::field_bounds);
 		FieldRenderer::render((char *)"RL", false);
+		//std::cout << output.motion.velocity_left << " : " << output.motion.velocity_right << std::endl;
+		std::cout << output.motion.position_left << " : " << output.motion.position_right << std::endl;
 
 		path.render();
 		Renderer::display();

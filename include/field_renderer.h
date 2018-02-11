@@ -15,7 +15,8 @@ namespace FieldRenderer {
 	const cv::Point3f blue (0.2, 0.5, 1.0);
 
 	void render(char* config, bool we_are_blue);
-	void render_rect(cv::Rect2f input, cv::Point3f rgb);
+	void render_rect(cv::Rect2f input);
+	void color_by_3f(cv::Point3f rgb);
 };
 
 #endif

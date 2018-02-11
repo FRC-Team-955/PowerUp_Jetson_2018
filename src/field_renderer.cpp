@@ -5,22 +5,34 @@ namespace FD = FieldDimension;
 void FieldRenderer::render(char* config, bool we_are_blue) {
 
 	//Field bounds
-	render_rect(FD::field_bounds, we_are_blue ? blue : red);
+	color_by_3f(we_are_blue ? blue : red);
+	glBegin(GL_LINES);
+	glVertex2f(0.0, FD::side_station_h);	
+	glVertex2f(FD::side_station_w, 0.0);	
+	glVertex2f(FD::field_back_w, 0.0);	
+	glVertex2f(FD::field_back_w + FD::side_station_w, FD::side_station_h);	
+	glEnd();
 
-	//Switch
-	render_rect(FD::Switch::boom, grey);
-	render_rect(FD::Switch::left_plate, (we_are_blue == (config[0] == 'L')) ? blue : red);
-	render_rect(FD::Switch::right_plate, (we_are_blue == (config[0] == 'R')) ? blue : red);
+	render_rect(FD::field_bounds);
 
-	//Scale
-	render_rect(FD::Scale::boom, grey);
-	render_rect(FD::Scale::left_plate, (we_are_blue == (config[1] == 'L')) ? blue : red);
-	render_rect(FD::Scale::right_plate, (we_are_blue == (config[1] == 'R')) ? blue : red);
+#define RENDER_SWSC(NAME, NUM) \
+	color_by_3f(grey); \
+	render_rect(FD::NAME::boom); \
+\
+	color_by_3f((we_are_blue == (config[NUM] == 'L')) ? blue : red);  \
+	render_rect(FD::NAME::left_plate); \
+\
+	color_by_3f((we_are_blue == (config[NUM] == 'R')) ? blue : red);  \
+	render_rect(FD::NAME::right_plate);
+
+	RENDER_SWSC(Switch, 0);
+	RENDER_SWSC(Scale, 1);
+
+#undef RENDER_SWSC
 }
 
-void FieldRenderer::render_rect(cv::Rect2f input, cv::Point3f rgb) {
+void FieldRenderer::render_rect(cv::Rect2f input) {
 	glLineWidth(2);
-	glColor3f(rgb.x, rgb.y, rgb.z);
 	glBegin(GL_LINES);
 
 	glVertex2f(input.tl().x, input.tl().y);
@@ -35,4 +47,8 @@ void FieldRenderer::render_rect(cv::Rect2f input, cv::Point3f rgb) {
 	glVertex2f(input.tl().x, input.br().y);
 	glVertex2f(input.tl().x, input.tl().y);
 	glEnd();
+}
+
+void FieldRenderer::color_by_3f(cv::Point3f rgb) {
+	glColor3f(rgb.x, rgb.y, rgb.z);
 }

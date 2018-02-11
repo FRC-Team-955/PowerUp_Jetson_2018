@@ -9,4 +9,15 @@ struct TankDriveMotionUnit {
 	float delta_time;
 };
 
+enum Action {
+	Scissor_UP,		
+	Scissor_AND_EXPEL,		
+	Scissor_DOWN,		
+};
+
+struct RobotCommand {
+	TankDriveMotionUnit motion;
+	Action action;
+};
+
 #endif
