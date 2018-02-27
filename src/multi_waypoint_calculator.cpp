@@ -1,4 +1,6 @@
 #include <multi_waypoint_calculator.h>
+
+//TODO: Add action pinning to waypoints (Just beginnging)
 // Reset the entire path, seeding the beginning
 void MultiWaypointCalculator::reset_and_begin(WayPoint input) {
 	path.clear();

@@ -5,7 +5,7 @@
 #include <renderer.h>
 #include <socket.h>
 
-#define JUST_RENDER true
+#define JUST_RENDER false
 
 namespace FD = FieldDimension;
 namespace MM = MiscMath;
@@ -24,7 +24,6 @@ int main() {
 	SocketServer sock(5801);
 #endif
 
-	srand(time(NULL));
 	const float wheel_width = 660.0;
 
 	MultiWaypointCalculator path(wheel_width / 2.0, 10);
@@ -58,28 +57,30 @@ int main() {
 			((WayPoint){FD::Switch::back,
 			min_speed, max_speed, (3.0f * MM::pi) / 2.0f, wheel_width}).before(wheel_width), false);
 
-	TankDriveCalculator::TankOutput output;
+	bool abort;
+	RobotCommand command;
+	TankDriveCalculator::TankOutput tank_output;
 	std::cout << "Begin main loop" << std::endl;
-	while (path.evaluate(output)) {
+	while (path.evaluate(tank_output)) {
 #if JUST_RENDER
 		Renderer::clear();
 		Renderer::bound(FD::field_bounds, 4.0);
 		Renderer::grid(1000.0, 1000.0, 0.2, 0.2, 0.2, FD::field_bounds);
 		FieldRenderer::render((char *)"RL", false);
 		//std::cout << output.motion.velocity_left << " : " << output.motion.velocity_right << std::endl;
-		std::cout << output.motion.position_left << " : " << output.motion.position_right << std::endl;
+		//std::cout << output.motion.position_left << " : " << output.motion.position_right << std::endl;
 
 		path.render();
 		Renderer::display();
 	}
 #else
-		bool abort;
-		sock.write_to(&output.motion, sizeof(TankDriveMotionUnit));
-		sock.read_to(&abort, sizeof(bool)); // Read once before we update the spline
+		command.motion = tank_output.motion;
+		sock.read_to(&abort, sizeof(bool)); 
+		sock.write_to(&command, sizeof(command));
 	}
 	std::cout << "Stopping" << std::endl;
-	output.motion.delta_time = 0.0;
-	bool abort;
-	sock.write_to(&output.motion, sizeof(TankDriveCalculator::TankOutput));
+	command.motion.delta_time = 0.0;
+	sock.read_to(&abort, sizeof(bool)); 
+	sock.write_to(&command, sizeof(command));
 #endif
 }
