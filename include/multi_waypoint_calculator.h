@@ -13,8 +13,8 @@ class MultiWaypointCalculator {
 		void render();
 		void reset_and_begin(WayPoint input);
 		void replace_current(WayPoint input);
-		void push_back(WayPoint input, bool reverse);
-		bool evaluate(TankDriveCalculator::TankOutput &output);
+		void push_back(WayPoint input, bool reverse, Action action);
+		bool evaluate(TankDriveCalculator::TankOutput &output, Action &action);
 
 	private:
 		float wheel_distance;
@@ -26,12 +26,14 @@ class MultiWaypointCalculator {
 			TankDriveCalculator path;
 			WayPoint end;
 			bool reverse;
+			Action action;
 		};
 
 		// The seed beginning of the path, because a path cannot be constructed from
 		// a single point
 		bool beginning_exists = false;
 		WayPoint beginning;
+		Action beginning_action;
 
 		// Back is the current path, front is the paths in the future
 		std::deque<PathEndPair> path;

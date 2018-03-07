@@ -5,7 +5,7 @@
 #include <renderer.h>
 #include <socket.h>
 
-#define JUST_RENDER false
+#define JUST_RENDER true
 
 namespace FD = FieldDimension;
 namespace MM = MiscMath;
@@ -21,7 +21,7 @@ namespace MM = MiscMath;
 int main() {
 #if JUST_RENDER
 	Renderer::init();
-#else
+	//#else
 	SocketServer sock(5801);
 #endif
 
@@ -32,39 +32,44 @@ int main() {
 	// Position, Start Velocity End Velocity, Direction (rel. to origin), outcrop
 	float min_speed = 0.5;
 	float max_speed = 1.0;
-	
+
 	//Start
 	path.reset_and_begin(
 			{cv::Point2f(1000.0, 1000.0),
 			min_speed, max_speed, MM::pi / 2.0f, wheel_width});
-	
+
 	//Switch front
 	path.push_back(
-			((WayPoint){FD::Switch::front,
-			min_speed, max_speed, MM::pi / 2.0f, wheel_width}).before(wheel_width), false);
+			{cv::Point2f(1000.0, 3000.0),
+			min_speed, max_speed, MM::pi / 2.0f, wheel_width}, false, Action::Cube_Intake);
+
+	path.push_back(
+			{cv::Point2f(4000.0, 3000.0),
+			min_speed, max_speed, MM::pi / 2.0f, wheel_width}, false, Action::None);
 
 	/*
 	//Back up
 	path.push_back(
-			{cv::Point2f(1000.0, 2000.0),
-			min_speed, max_speed, MM::pi / 2.0f, wheel_width}, true);
+	{cv::Point2f(1000.0, 2000.0),
+	min_speed, max_speed, MM::pi / 2.0f, wheel_width}, true);
 
 	//Trek forward
 	path.push_back(
-			{cv::Point2f(1000.0, 4000.0),
-			max_speed, max_speed, MM::pi / 2.0f, wheel_width}, false);
+	{cv::Point2f(1000.0, 4000.0),
+	max_speed, max_speed, MM::pi / 2.0f, wheel_width}, false);
 
 	//Meet the other side of the switch
 	path.push_back(
-			((WayPoint){FD::Switch::back,
-			min_speed, max_speed, (3.0f * MM::pi) / 2.0f, wheel_width}).before(wheel_width), false);
-			*/
+	((WayPoint){FD::Switch::back,
+	min_speed, max_speed, (3.0f * MM::pi) / 2.0f, wheel_width}).before(wheel_width), false);
+	*/
 
 	bool abort;
 	RobotCommand command;
+	Action action;
 	TankDriveCalculator::TankOutput tank_output;
 	std::cout << "Begin main loop" << std::endl;
-	while (path.evaluate(tank_output)) {
+	while (path.evaluate(tank_output, action)) {
 #if JUST_RENDER
 		Renderer::clear();
 		Renderer::bound(FD::field_bounds, 4.0);
@@ -75,15 +80,17 @@ int main() {
 
 		path.render();
 		Renderer::display();
-	}
-#else
+		//#else
 		command.motion = tank_output.motion;
+		command.action = action;
 		sock.read_to(&abort, sizeof(bool)); 
 		sock.write_to(&command, sizeof(command));
+		std::cout << action << std::endl;
+
+#endif
 	}
 	std::cout << "Stopping" << std::endl;
 	command.motion.delta_time = 0.0;
 	sock.read_to(&abort, sizeof(bool)); 
 	sock.write_to(&command, sizeof(command));
-#endif
 }

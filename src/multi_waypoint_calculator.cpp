@@ -8,8 +8,9 @@ void MultiWaypointCalculator::reset_and_begin(WayPoint input) {
 }
 
 // Evaluate the next point on the full path, transitioning smoothly from one point to the next
-bool MultiWaypointCalculator::evaluate(TankDriveCalculator::TankOutput &output) {
+bool MultiWaypointCalculator::evaluate(TankDriveCalculator::TankOutput &output, Action &action) {
 		// Get to the next valid path, skipping immediately void ones.
+		action = path.back().action;
 		while (path.size() && !path.back().path.evaluate(output, true)) {
 			path.pop_back();
 		}
@@ -43,7 +44,7 @@ void MultiWaypointCalculator::replace_current(WayPoint input) {
 
 // Push a new objective to the full path, caching it's end point so we can
 // swap it later
-void MultiWaypointCalculator::push_back(WayPoint input, bool reverse) {
+void MultiWaypointCalculator::push_back(WayPoint input, bool reverse, Action action) {
 	// Either use the last spline's end, or the seed start
 	WayPoint start; 
 	if (path.size() == 0) {
@@ -59,7 +60,7 @@ void MultiWaypointCalculator::push_back(WayPoint input, bool reverse) {
 			max_change_time);
 
 	// Push it as the next objective
-	path.push_front( { calc, input, reverse } );
+	path.push_front( { calc, input, reverse, action } );
 }
 
 void MultiWaypointCalculator::render() {

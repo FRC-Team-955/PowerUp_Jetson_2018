@@ -10,6 +10,7 @@ struct TankDriveMotionUnit {
 };
 
 enum Action {
+	None          =  0,
 	Scissor_Up    =  1,
 	Scissor_Down  =  2,
 	Cube_Expel    =  4,
