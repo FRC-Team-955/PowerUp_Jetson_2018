@@ -5,92 +5,66 @@
 #include <renderer.h>
 #include <socket.h>
 
-#define JUST_RENDER true
+#define RENDER true
 
 namespace FD = FieldDimension;
 namespace MM = MiscMath;
 
-// TODO:
-//    Make creating waypoints cleaner/easier
-//    Documentation
-//    Proper error reporting and logging; Return enum with error code instead of bool? 
-//    	0 for success, any for fail for partial backwards compat.
-//    Action items, attached to waypoints (Executes at end of path)
-//    Async IO
-
 int main() {
-#if JUST_RENDER
+#if RENDER
 	Renderer::init();
-	//#else
-	SocketServer sock(5801);
 #endif
+	std::cout << "Waiting for connection..." << std::endl;
+	SocketServer rio(5801);
 
 	const float wheel_width = 660.0;
 
-	MultiWaypointCalculator path(wheel_width / 2.0, 10);
+	RioCommand output_command;
+	JetsonCommand input_command;
+	JetsonCommand setup_info;
 
-	// Position, Start Velocity End Velocity, Direction (rel. to origin), outcrop
-	float min_speed = 0.5;
-	float max_speed = 1.0;
+	//while (rio.is_open()) {
+	while (true) {
+		//Wait for setup data
+		while (setup_info.type != JetsonCommand::Type::Setup) {
+			//TODO: Recoverable reboots, queries where the bot thinks it is and sets self to that position
+			output_command.type = RioCommand::Type::Request_Setup;
+			rio.write_to(&output_command, sizeof(RioCommand));
+			rio.read_to(&setup_info, sizeof(JetsonCommand)); 
+		}
+		// Create a path based on the field colors and our position
+		MultiWaypointCalculator path(setup_info.setup_data.wheel_width_mm / 2.0, setup_info.setup_data.delta_time_ms);
 
-	//Start
-	path.reset_and_begin(
-			{cv::Point2f(1000.0, 1000.0),
-			min_speed, max_speed, MM::pi / 2.0f, wheel_width});
+		//Start
+		path.reset_and_begin(
+				{cv::Point2f(1000.0, 1000.0),
+				setup_info.setup_data.min_velocity_mps, setup_info.setup_data.max_velocity_mps, MM::pi / 2.0f, wheel_width});
 
-	//Switch front
-	path.push_back(
-			{cv::Point2f(1000.0, 3000.0),
-			min_speed, max_speed, MM::pi / 2.0f, wheel_width}, false, Action::Cube_Intake);
+		//Switch front
+		path.push_back(
+				{FD::Switch::front,
+				setup_info.setup_data.min_velocity_mps, setup_info.setup_data.max_velocity_mps, MM::pi / 2.0f, wheel_width}, false, RioCommand::Action::Cube_Intake);
 
-	path.push_back(
-			{cv::Point2f(4000.0, 3000.0),
-			min_speed, max_speed, MM::pi / 2.0f, wheel_width}, false, Action::None);
-
-	/*
-	//Back up
-	path.push_back(
-	{cv::Point2f(1000.0, 2000.0),
-	min_speed, max_speed, MM::pi / 2.0f, wheel_width}, true);
-
-	//Trek forward
-	path.push_back(
-	{cv::Point2f(1000.0, 4000.0),
-	max_speed, max_speed, MM::pi / 2.0f, wheel_width}, false);
-
-	//Meet the other side of the switch
-	path.push_back(
-	((WayPoint){FD::Switch::back,
-	min_speed, max_speed, (3.0f * MM::pi) / 2.0f, wheel_width}).before(wheel_width), false);
-	*/
-
-	bool abort;
-	RobotCommand command;
-	Action action;
-	TankDriveCalculator::TankOutput tank_output;
-	std::cout << "Begin main loop" << std::endl;
-	while (path.evaluate(tank_output, action)) {
-#if JUST_RENDER
-		Renderer::clear();
-		Renderer::bound(FD::field_bounds, 4.0);
-		Renderer::grid(1000.0, 1000.0, 0.2, 0.2, 0.2, FD::field_bounds);
-		FieldRenderer::render((char *)"RL", false);
-		//std::cout << output.motion.velocity_left << " : " << output.motion.velocity_right << std::endl;
-		//std::cout << output.motion.position_left << " : " << output.motion.position_right << std::endl;
-
-		path.render();
-		Renderer::display();
-		//#else
-		command.motion = tank_output.motion;
-		command.action = action;
-		sock.read_to(&abort, sizeof(bool)); 
-		sock.write_to(&command, sizeof(command));
-		std::cout << action << std::endl;
-
+		TankDriveCalculator::TankOutput tank_output;
+		while (path.evaluate(tank_output, output_command.action)) {
+			output_command.type = RioCommand::Type::Motion;
+			output_command.motion = tank_output.motion;
+			rio.write_to(&output_command, sizeof(output_command));
+			rio.read_to(&input_command, sizeof(input_command)); 
+			if (input_command.type == JetsonCommand::Type::Setup) {
+				break;
+			}
+#if RENDER
+			Renderer::clear();
+			Renderer::bound(FD::field_bounds, 4.0);
+			Renderer::grid(1000.0, 1000.0, 0.2, 0.2, 0.2, FD::field_bounds);
+			FieldRenderer::render(setup_info.setup_data.field_colors, setup_info.setup_data.we_are_blue);
+			path.render();
+			Renderer::display();
 #endif
+		}
+		std::cout << "Ran out; Sent stop." << std::endl;
+		output_command.type = RioCommand::Type::Stop;
+		rio.write_to(&output_command, sizeof(output_command));
 	}
-	std::cout << "Stopping" << std::endl;
-	command.motion.delta_time = 0.0;
-	sock.read_to(&abort, sizeof(bool)); 
-	sock.write_to(&command, sizeof(command));
 }

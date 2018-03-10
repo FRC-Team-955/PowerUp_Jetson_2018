@@ -35,8 +35,6 @@ bool TankDriveCalculator::evaluate (TankDriveCalculator::TankOutput& output, flo
 		output.motion.position_left += dp_left;
 		output.motion.position_right += dp_right;
 
-		output.motion.delta_time = time_step;
-
 		//TODO: Make the actual function exposed instead of this garbage?
 		output.robot_direction = function->direction_xy();
 
