@@ -39,8 +39,10 @@ namespace FieldDimension {
 			boom_w, \
 			boom_h); \
 	\
-	const cv::Point2f front ((left_plate.br().x + left_plate.tl().x) / 2.0, left_plate.tl().y); \
-	const cv::Point2f back ((left_plate.br().x + left_plate.tl().x) / 2.0, left_plate.br().y);
+	const cv::Point2f front_left ((left_plate.br().x + left_plate.tl().x) / 2.0, left_plate.tl().y); \
+	const cv::Point2f back_left ((left_plate.br().x + left_plate.tl().x) / 2.0, left_plate.br().y); \
+	const cv::Point2f front_right ((right_plate.br().x + right_plate.tl().x) / 2.0, right_plate.tl().y); \
+	const cv::Point2f back_right ((right_plate.br().x + right_plate.tl().x) / 2.0, right_plate.br().y);
 
 	namespace Switch {
 		const float boom_w = IN_TO_MM(72.0);
